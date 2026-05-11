@@ -427,8 +427,8 @@ def format_message(l: Listing) -> str:
         header = f"{SCORE_EMOJI.get(l.deal_score, '📍')} *Deal Score: {l.deal_score}/7* `{score_bar}`\n"
 
     price_str   = f"€{l.price:,}"       if l.price else "?"
-    sqm_str     = f"{l.sqm:.0f} מ"ר"    if l.sqm   else "?"
-    sqm_p_str   = f"€{l.price_per_sqm:.0f}/מ"ר" if l.price_per_sqm else "?"
+    sqm_str     = f"{l.sqm:.0f} sqm"    if l.sqm   else "?"
+    sqm_p_str   = f"EUR{l.price_per_sqm:.0f}/sqm" if l.price_per_sqm else "?"
     floor_str   = {-1: "ημιυπόγειο", 0: "ισόγειο"}.get(l.floor, f"קומה {l.floor}") if l.floor is not None else "?"
     renov_str   = f"€{l.estimated_renovation:,}" if l.estimated_renovation else "?"
     disc_str    = pct(l.discount_vs_market) if l.discount_vs_market else "?"
@@ -446,7 +446,7 @@ def format_message(l: Listing) -> str:
         f"📊 vs שוק: `{disc_str}`\n\n"
         f"🔨 שיפוץ מוערך: {renov_str}\n"
         f"📈 ROI פליפ: `{roi_str}`\n"
-        f"🏠 תשואה שכ"ד: `{yield_str}`\n\n"
+        f"\U0001f3e0 Rent yield: `{yield_str}`\\n\\n"
         f"🔗 [לפתיחת המודעה]({l.url})\n"
         f"🕐 _{l.scraped_at[:16].replace('T', ' ')}_"
     )
