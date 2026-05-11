@@ -1,0 +1,43 @@
+name: Property Scout
+
+on:
+  schedule:
+    - cron: "0 7 * * 0-5"
+    - cron: "30 16 * * 0-4"
+  workflow_dispatch:
+
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('scraper/requirements.txt') }}
+      - name: Install dependencies
+        run: pip install -r scraper/requirements.txt
+      - name: Restore seen listings
+        uses: actions/cache@v4
+        with:
+          path: seen_listings.json
+          key: seen-listings-${{ github.run_id }}
+          restore-keys: |
+            seen-listings-
+      - name: Run scraper
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python scraper/scout.py
+      - name: Save seen listings
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: seen_listings.json
+          key: seen-listings-${{ github.run_id }}
