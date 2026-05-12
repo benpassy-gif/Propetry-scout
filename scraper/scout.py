@@ -400,23 +400,28 @@ def format_message(l, profile_name):
     area_clean = l.area.replace("-", " ").title()
     source_map = {"spitogatos": "Spitogatos", "xe": "XE.gr", "rightmove": "Rightmove"}
 
+    floor_str = ""
+    if l.floor is not None:
+        if l.floor == -1: floor_str = " | basement"
+        elif l.floor == 0: floor_str = " | ground"
+        else: floor_str = " | floor {}".format(l.floor)
+
     if l.is_auction:
-        header = "AUCTION ALERT\n"
+        header = "\u2696\ufe0f AUCTION ALERT"
     else:
-        header = "Deal Score: {}/7 [{}]\n".format(l.deal_score, score_bar)
+        score_emoji = "\U0001f525" if l.deal_score >= 6 else "\u2728" if l.deal_score >= 4 else "\U0001f4cc"
+        header = "{} Score {}/7 [{}]".format(score_emoji, l.deal_score, score_bar)
 
     lines = [
         header,
-        "Profile: {}".format(profile_name),
-        "{} | {}".format(area_clean, source_map.get(l.source, l.source)),
+        "\U0001f4cd {} \u00b7 {}".format(area_clean, source_map.get(l.source, l.source)),
         l.title[:60],
         "",
-        "{} | {} | {}".format(price_str, sqm_str, sqmp_str),
-        "vs market: {:+.1f}%".format(disc),
+        "\U0001f4b0 {} \u00b7 {} \u00b7 {}{}".format(price_str, sqm_str, sqmp_str, floor_str),
+        "\U0001f4ca vs market: {:+.1f}%".format(disc),
         "",
-        "Renovation est.: {}".format(renov_str),
-        "Flip ROI: {:.1f}%".format(roi),
-        "Rent yield: {:.1f}%".format(yld),
+        "\U0001f527 Renovation: {}".format(renov_str),
+        "\U0001f4c8 Flip ROI: {:.1f}%  |  Rent: {:.1f}%".format(roi, yld),
         "",
         l.url,
     ]
