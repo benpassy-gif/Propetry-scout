@@ -2,8 +2,7 @@ name: Property Scout
 
 on:
   schedule:
-    - cron: "0 7 * * 0-5"
-    - cron: "30 16 * * 0-4"
+    - cron: "0 8 * * 0-5"
   workflow_dispatch:
     inputs:
       profile_id:
