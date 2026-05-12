@@ -465,9 +465,13 @@ def run_profile(profile, benchmarks, seen, results, page):
 
     log.info("Profile %s: %d total listings fetched", pid, len(all_listings))
 
-    new_count = 0
+new_count = 0
     auction_count = 0
     min_score = filters.get("min_deal_score", 3)
+    max_alerts = filters.get("max_alerts_per_run", 4)
+
+    # Sort by deal score descending so we send the BEST deals first
+    all_listings.sort(key=lambda x: x.deal_score, reverse=True)
 
     for l in all_listings:
         if l.id in seen:
@@ -483,9 +487,9 @@ def run_profile(profile, benchmarks, seen, results, page):
 
         msg = format_message(l, name)
         if l.is_auction:
-            send_telegram("AUCTION ALERT\n\n" + msg)
+            send_telegram("\u2696\ufe0f AUCTION\n\n" + msg)
             auction_count += 1
-        elif l.deal_score >= min_score:
+        elif l.deal_score >= min_score and new_count < max_alerts:
             send_telegram(msg)
             new_count += 1
 
