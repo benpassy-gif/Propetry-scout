@@ -1,7 +1,7 @@
 """
-Property Scout v2 - Multi-Profile Edition
-Reads profiles.json and runs scraping for all active profiles
-Saves results to results.json for the dashboard
+Property Scout v3 - Playwright Edition
+Uses headless browser to bypass anti-bot protections
+Supports: Spitogatos, XE.gr, Rightmove
 """
 
 import os
@@ -16,7 +16,7 @@ from dataclasses import dataclass, asdict
 from typing import Optional, List
 
 import requests
-from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -36,15 +36,6 @@ AUCTION_KEYWORDS = [
     "\u03ba\u03b1\u03c4\u03ac\u03c3\u03c7\u03b5\u03c3\u03b7",
     "\u03b5\u03ba\u03c0\u03bb\u03b5\u03b9\u03c3\u03c4\u03b7\u03c1\u03af\u03b1\u03c3\u03b7",
 ]
-
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/120.0.0.0 Safari/537.36"
-    ),
-    "Accept-Language": "el-GR,el;q=0.9,en;q=0.8",
-}
 
 
 @dataclass
@@ -103,16 +94,6 @@ class Listing:
         self.deal_score = min(score, 7)
 
 
-def get_soup(url):
-    try:
-        r = requests.get(url, headers=HEADERS, timeout=15)
-        r.raise_for_status()
-        return BeautifulSoup(r.text, "html.parser")
-    except Exception as e:
-        log.warning("Failed to fetch %s: %s", url, e)
-        return None
-
-
 def parse_number(text):
     text = re.sub(r"[\u20ac$\u00a3\s]", "", str(text))
     match = re.search(r"[\d.,]+", text)
@@ -151,97 +132,152 @@ def make_listing(source, href, title, price, sqm, floor, area, desc, profile_id,
     return l
 
 
-def scrape_spitogatos(area, filters, profile_id, benchmarks, renov_cost):
+def scrape_spitogatos_playwright(page, area, filters, profile_id, benchmarks, renov_cost):
+    """Scrape Spitogatos using Playwright headless browser."""
     listings = []
     base = "https://www.spitogatos.gr"
     url = (
-        base + "/sale-flats/" + area
-        + "?minPrice=" + str(filters["min_price"])
-        + "&maxPrice=" + str(filters["max_price"])
-        + "&minArea=" + str(filters["min_sqm"])
-        + "&maxArea=" + str(filters["max_sqm"])
-        + "&sort=date_desc"
+        base + "/en/for_sale-homes/" + area
+        + "?price[]=" + str(filters["min_price"]) + "%2C" + str(filters["max_price"])
+        + "&areas[]=" + str(filters["min_sqm"]) + "%2C" + str(filters["max_sqm"])
     )
     log.info("Spitogatos: %s", url)
-    soup = get_soup(url)
-    if not soup:
-        return listings
-    cards = soup.select("article.listing-item, div.property-listing-item, li.result-item, [data-id], .property-card")
-    for card in cards[:20]:
+
+    try:
+        page.goto(url, timeout=30000, wait_until="domcontentloaded")
+        # Wait for property cards or "no results" message
         try:
-            link = card.select_one("a[href]")
-            if not link:
-                continue
-            href = link.get("href", "")
-            if not href.startswith("http"):
-                href = base + href
-            price_el = card.select_one(".price, [class*='price']")
-            price = parse_number(price_el.get_text() if price_el else "")
-            sqm_el = card.select_one(".area, [class*='area'], [class*='sqm']")
-            sqm_text = sqm_el.get_text() if sqm_el else ""
-            sqm_match = re.search(r"(\d+)", sqm_text)
-            sqm = float(sqm_match.group(1)) if sqm_match else None
-            title_el = card.select_one("h2, h3, [class*='title']")
-            title = title_el.get_text(strip=True) if title_el else "Apartment"
-            desc_el = card.select_one("p, [class*='desc']")
-            desc = desc_el.get_text(strip=True) if desc_el else ""
-            l = make_listing("spitogatos", href, title, price, sqm, None, area, desc, profile_id, filters, benchmarks, renov_cost)
-            if l:
-                listings.append(l)
-        except Exception as e:
-            log.debug("Spitogatos error: %s", e)
+            page.wait_for_selector('a[href*="/property/"], .no-results', timeout=10000)
+        except PlaywrightTimeout:
+            log.warning("Spitogatos %s: no listings selector found", area)
+
+        time.sleep(2)  # Let JS settle
+
+        # Extract listings via JavaScript
+        results = page.evaluate("""
+        () => {
+          const cards = document.querySelectorAll('a[href*="/property/"]');
+          const seen = new Set();
+          const out = [];
+          cards.forEach(card => {
+            const href = card.href;
+            if (seen.has(href)) return;
+            seen.add(href);
+            const container = card.closest('article, li, div');
+            const text = container ? container.innerText : card.innerText;
+            out.push({ href: href, text: text });
+          });
+          return out;
+        }
+        """)
+
+        for item in results[:25]:
+            try:
+                href = item["href"]
+                text = item["text"]
+
+                # Price - look for € followed by number
+                price_match = re.search(r"€\s*([\d.,]+)", text)
+                price = parse_number(price_match.group(1)) if price_match else None
+
+                # Sqm - number followed by m²
+                sqm_match = re.search(r"(\d+)\s*m[²2]", text)
+                sqm = float(sqm_match.group(1)) if sqm_match else None
+
+                # Title - first line usually
+                title = text.split("\n")[0][:80] if text else "Apartment"
+
+                # Floor
+                floor_match = re.search(r"(\d+)(?:st|nd|rd|th)\s*floor", text, re.IGNORECASE)
+                floor = int(floor_match.group(1)) if floor_match else None
+
+                l = make_listing("spitogatos", href, title, price, sqm, floor, area, text, profile_id, filters, benchmarks, renov_cost)
+                if l:
+                    listings.append(l)
+            except Exception as e:
+                log.debug("Spitogatos card error: %s", e)
+
+    except Exception as e:
+        log.warning("Spitogatos %s failed: %s", area, e)
+
     log.info("Spitogatos %s: %d listings", area, len(listings))
     return listings
 
 
-def scrape_xe(area, filters, profile_id, benchmarks, renov_cost):
+def scrape_xe_playwright(page, area, filters, profile_id, benchmarks, renov_cost):
+    """Scrape XE.gr using Playwright."""
     listings = []
-    base = "https://www.xe.gr"
     xe_area_map = {
-        "nea-smyrni": "Nea+Smyrni",
-        "kallithea": "Kallithea",
-        "palaio-faliro": "Palaio+Faliro",
-        "glyfada": "Glyfada",
-        "ilioupoli": "Ilioupoli",
+        "nea-smyrni": "nea-smyrni-attiki",
+        "kallithea": "kallithea-attiki",
+        "palaio-faliro": "palaio-faliro-attiki",
+        "glyfada": "glyfada-attiki",
+        "ilioupoli": "ilioupoli-attiki",
     }
-    area_name = xe_area_map.get(area, area)
+    area_slug = xe_area_map.get(area, area)
     url = (
-        base + "/property/for-sale/apartments"
-        + "?area=" + area_name
-        + "&price_from=" + str(filters["min_price"])
-        + "&price_to=" + str(filters["max_price"])
-        + "&size_from=" + str(filters["min_sqm"])
-        + "&size_to=" + str(filters["max_sqm"])
-        + "&sort=date"
+        "https://www.xe.gr/property/results/"
+        + "?Transaction.type_channel=117518"
+        + "&Item.category=117541"
+        + "&geo_place_ids=" + area_slug
+        + "&Item.price.from=" + str(filters["min_price"])
+        + "&Item.price.to=" + str(filters["max_price"])
+        + "&Item.area.from=" + str(filters["min_sqm"])
+        + "&Item.area.to=" + str(filters["max_sqm"])
     )
     log.info("XE.gr: %s", url)
-    soup = get_soup(url)
-    if not soup:
-        return listings
-    cards = soup.select(".property-list-item, article[data-id], .listing-result")
-    for card in cards[:20]:
+
+    try:
+        page.goto(url, timeout=30000, wait_until="domcontentloaded")
         try:
-            link = card.select_one("a[href]")
-            if not link:
-                continue
-            href = link.get("href", "")
-            if not href.startswith("http"):
-                href = base + href
-            price = parse_number(card.get_text())
-            sqm_match = re.search(r"(\d+)\s*t\.m", card.get_text())
-            sqm = float(sqm_match.group(1)) if sqm_match else None
-            title_el = card.select_one("h2, h3, .title")
-            title = title_el.get_text(strip=True) if title_el else "Apartment"
-            l = make_listing("xe", href, title, price, sqm, None, area, card.get_text()[:300], profile_id, filters, benchmarks, renov_cost)
-            if l:
-                listings.append(l)
-        except Exception as e:
-            log.debug("XE error: %s", e)
+            page.wait_for_selector('a[href*="/property/"], [class*="result"]', timeout=10000)
+        except PlaywrightTimeout:
+            log.warning("XE %s: no listings found", area)
+
+        time.sleep(2)
+
+        results = page.evaluate("""
+        () => {
+          const cards = document.querySelectorAll('a[href*="/property/"]');
+          const seen = new Set();
+          const out = [];
+          cards.forEach(card => {
+            const href = card.href;
+            if (seen.has(href)) return;
+            seen.add(href);
+            const container = card.closest('article, li, div');
+            const text = container ? container.innerText : card.innerText;
+            out.push({ href: href, text: text });
+          });
+          return out;
+        }
+        """)
+
+        for item in results[:25]:
+            try:
+                href = item["href"]
+                text = item["text"]
+                price_match = re.search(r"€\s*([\d.,]+)", text)
+                price = parse_number(price_match.group(1)) if price_match else None
+                sqm_match = re.search(r"(\d+)\s*(?:m[²2]|\u03c4\.\u03bc)", text)
+                sqm = float(sqm_match.group(1)) if sqm_match else None
+                title = text.split("\n")[0][:80] if text else "Apartment"
+
+                l = make_listing("xe", href, title, price, sqm, None, area, text, profile_id, filters, benchmarks, renov_cost)
+                if l:
+                    listings.append(l)
+            except Exception as e:
+                log.debug("XE card error: %s", e)
+
+    except Exception as e:
+        log.warning("XE %s failed: %s", area, e)
+
     log.info("XE %s: %d listings", area, len(listings))
     return listings
 
 
-def scrape_rightmove(area, filters, profile_id, benchmarks, renov_cost):
+def scrape_rightmove_playwright(page, area, filters, profile_id, benchmarks, renov_cost):
+    """Scrape Rightmove using Playwright."""
     listings = []
     rightmove_areas = {
         "nea-smyrni": "REGION%5E87528",
@@ -253,6 +289,7 @@ def scrape_rightmove(area, filters, profile_id, benchmarks, renov_cost):
     loc = rightmove_areas.get(area)
     if not loc:
         return listings
+
     url = (
         "https://www.rightmove.co.uk/overseas-property/in-Greece.html"
         + "?locationIdentifier=" + loc
@@ -261,29 +298,53 @@ def scrape_rightmove(area, filters, profile_id, benchmarks, renov_cost):
         + "&propertyTypes=flat"
     )
     log.info("Rightmove: %s", url)
-    soup = get_soup(url)
-    if not soup:
-        return listings
-    cards = soup.select("article.l-searchResult, .propertyCard")
-    for card in cards[:10]:
+
+    try:
+        page.goto(url, timeout=30000, wait_until="domcontentloaded")
         try:
-            link = card.select_one("a.propertyCard-link, a[href*='/properties/']")
-            if not link:
-                continue
-            href = "https://www.rightmove.co.uk" + link.get("href", "")
-            price_el = card.select_one(".propertyCard-priceValue, .price")
-            price = parse_number(price_el.get_text() if price_el else "")
-            title_el = card.select_one("h2, .propertyCard-title")
-            title = title_el.get_text(strip=True) if title_el else "Property"
-            desc_el = card.select_one(".propertyCard-description")
-            desc = desc_el.get_text(strip=True) if desc_el else ""
-            sqm_match = re.search(r"(\d+)\s*(sq\.?\s*m|m2)", desc, re.IGNORECASE)
-            sqm = float(sqm_match.group(1)) if sqm_match else None
-            l = make_listing("rightmove", href, title, price, sqm, None, area, desc, profile_id, filters, benchmarks, renov_cost)
-            if l:
-                listings.append(l)
-        except Exception as e:
-            log.debug("Rightmove error: %s", e)
+            page.wait_for_selector('a[href*="/properties/"], .propertyCard', timeout=10000)
+        except PlaywrightTimeout:
+            log.warning("Rightmove %s: no listings", area)
+
+        time.sleep(2)
+
+        results = page.evaluate("""
+        () => {
+          const cards = document.querySelectorAll('a[href*="/properties/"]');
+          const seen = new Set();
+          const out = [];
+          cards.forEach(card => {
+            const href = card.href;
+            if (seen.has(href)) return;
+            seen.add(href);
+            const container = card.closest('.propertyCard, article, div');
+            const text = container ? container.innerText : card.innerText;
+            out.push({ href: href, text: text });
+          });
+          return out;
+        }
+        """)
+
+        for item in results[:15]:
+            try:
+                href = item["href"]
+                text = item["text"]
+                # Rightmove can show £ or € depending on currency
+                price_match = re.search(r"[€£]\s*([\d.,]+)", text)
+                price = parse_number(price_match.group(1)) if price_match else None
+                sqm_match = re.search(r"(\d+)\s*(?:sq\.?\s*m|m[²2])", text, re.IGNORECASE)
+                sqm = float(sqm_match.group(1)) if sqm_match else None
+                title = text.split("\n")[0][:80] if text else "Property"
+
+                l = make_listing("rightmove", href, title, price, sqm, None, area, text, profile_id, filters, benchmarks, renov_cost)
+                if l:
+                    listings.append(l)
+            except Exception as e:
+                log.debug("Rightmove card error: %s", e)
+
+    except Exception as e:
+        log.warning("Rightmove %s failed: %s", area, e)
+
     log.info("Rightmove %s: %d listings", area, len(listings))
     return listings
 
@@ -321,7 +382,6 @@ def load_results():
 
 
 def save_results(data):
-    # Keep only last 500 listings to prevent file bloat
     data["listings"] = data["listings"][-500:]
     data["runs"] = data["runs"][-50:]
     with open(RESULTS_FILE, "w") as f:
@@ -378,7 +438,7 @@ def send_telegram(message):
         log.error("Telegram error: %s", e)
 
 
-def run_profile(profile, benchmarks, seen, results):
+def run_profile(profile, benchmarks, seen, results, page):
     """Run scraping for a single profile."""
     name = profile["name"]
     pid = profile["id"]
@@ -391,12 +451,12 @@ def run_profile(profile, benchmarks, seen, results):
 
     all_listings = []
     for area in filters["areas"]:
-        all_listings.extend(scrape_spitogatos(area, filters, pid, benchmarks, renov))
-        time.sleep(2)
-        all_listings.extend(scrape_xe(area, filters, pid, benchmarks, renov))
-        time.sleep(2)
-        all_listings.extend(scrape_rightmove(area, filters, pid, benchmarks, renov))
-        time.sleep(2)
+        all_listings.extend(scrape_spitogatos_playwright(page, area, filters, pid, benchmarks, renov))
+        time.sleep(1)
+        all_listings.extend(scrape_xe_playwright(page, area, filters, pid, benchmarks, renov))
+        time.sleep(1)
+        all_listings.extend(scrape_rightmove_playwright(page, area, filters, pid, benchmarks, renov))
+        time.sleep(1)
 
     log.info("Profile %s: %d total listings fetched", pid, len(all_listings))
 
@@ -414,7 +474,6 @@ def run_profile(profile, benchmarks, seen, results):
             if l.floor < filters.get("min_floor", -10) or l.floor > filters.get("max_floor", 100):
                 continue
 
-        # Save to results regardless of score
         results["listings"].append(asdict(l))
 
         msg = format_message(l, name)
@@ -438,9 +497,7 @@ def run_profile(profile, benchmarks, seen, results):
 
 
 def main():
-    log.info("=== Property Scout v2 starting ===")
-
-    # Check for profile filter argument (used by manual runs)
+    log.info("=== Property Scout v3 (Playwright) starting ===")
     profile_filter = os.environ.get("PROFILE_ID", "").strip()
 
     data = load_profiles()
@@ -462,31 +519,47 @@ def main():
     seen = load_seen()
     results = load_results()
 
-    run_summary = []
-    for profile in profiles:
-        try:
-            r = run_profile(profile, benchmarks, seen, results)
-            run_summary.append(r)
-            # Update last_run timestamp
-            for p in data["profiles"]:
-                if p["id"] == profile["id"]:
-                    p["last_run"] = datetime.utcnow().isoformat()
-        except Exception as e:
-            log.error("Profile %s failed: %s", profile["id"], e)
-            run_summary.append({
-                "profile_id": profile["id"],
-                "profile_name": profile["name"],
-                "error": str(e),
-                "timestamp": datetime.utcnow().isoformat(),
-            })
+    # Launch Playwright once for all profiles
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True, args=[
+            "--disable-blink-features=AutomationControlled",
+            "--no-sandbox",
+        ])
+        context = browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            locale="el-GR",
+            viewport={"width": 1366, "height": 768},
+        )
+        # Stealth: hide webdriver flag
+        context.add_init_script(
+            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+        )
+        page = context.new_page()
 
-    # Save everything
+        run_summary = []
+        for profile in profiles:
+            try:
+                r = run_profile(profile, benchmarks, seen, results, page)
+                run_summary.append(r)
+                for p_obj in data["profiles"]:
+                    if p_obj["id"] == profile["id"]:
+                        p_obj["last_run"] = datetime.utcnow().isoformat()
+            except Exception as e:
+                log.error("Profile %s failed: %s", profile["id"], e)
+                run_summary.append({
+                    "profile_id": profile["id"],
+                    "profile_name": profile["name"],
+                    "error": str(e),
+                    "timestamp": datetime.utcnow().isoformat(),
+                })
+
+        browser.close()
+
     save_seen(seen)
     results["runs"].extend(run_summary)
     save_results(results)
     save_profiles(data)
 
-    # Send summary
     total_new = sum(r.get("new_alerts", 0) for r in run_summary)
     total_auctions = sum(r.get("auctions", 0) for r in run_summary)
     summary_lines = [
