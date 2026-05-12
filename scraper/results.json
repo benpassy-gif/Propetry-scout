@@ -1,0 +1,21 @@
+{
+  "listings": [],
+  "runs": [
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 0,
+      "new_alerts": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-12T17:48:50.817027"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 0,
+      "new_alerts": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-12T17:49:04.436042"
+    }
+  ]
+}

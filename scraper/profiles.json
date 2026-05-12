@@ -6,7 +6,11 @@
       "description": "Cheap apartments for flipping in central Athens",
       "active": true,
       "filters": {
-        "areas": ["nea-smyrni", "kallithea", "ilioupoli"],
+        "areas": [
+          "nea-smyrni",
+          "kallithea",
+          "ilioupoli"
+        ],
         "min_sqm": 40,
         "max_sqm": 90,
         "min_price": 40000,
@@ -19,7 +23,7 @@
       "renovation_cost_per_sqm": 800,
       "target_mode": "flip",
       "created_at": "2026-05-12T00:00:00",
-      "last_run": null
+      "last_run": "2026-05-12T17:48:50.817046"
     },
     {
       "id": "rental-south",
@@ -27,7 +31,10 @@
       "description": "Long-term rental in southern Athens suburbs",
       "active": true,
       "filters": {
-        "areas": ["palaio-faliro", "glyfada"],
+        "areas": [
+          "palaio-faliro",
+          "glyfada"
+        ],
         "min_sqm": 50,
         "max_sqm": 100,
         "min_price": 80000,
@@ -40,7 +47,7 @@
       "renovation_cost_per_sqm": 600,
       "target_mode": "rent",
       "created_at": "2026-05-12T00:00:00",
-      "last_run": null
+      "last_run": "2026-05-12T17:49:04.436058"
     },
     {
       "id": "deep-discount",
@@ -48,7 +55,13 @@
       "description": "Find properties significantly below market price",
       "active": false,
       "filters": {
-        "areas": ["nea-smyrni", "kallithea", "palaio-faliro", "glyfada", "ilioupoli"],
+        "areas": [
+          "nea-smyrni",
+          "kallithea",
+          "palaio-faliro",
+          "glyfada",
+          "ilioupoli"
+        ],
         "min_sqm": 30,
         "max_sqm": 150,
         "min_price": 30000,
@@ -65,15 +78,45 @@
     }
   ],
   "area_benchmarks": {
-    "nea-smyrni":    {"price_sqm": 2800, "rent_sqm": 12},
-    "kallithea":     {"price_sqm": 2200, "rent_sqm": 10},
-    "palaio-faliro": {"price_sqm": 3200, "rent_sqm": 13},
-    "glyfada":       {"price_sqm": 3500, "rent_sqm": 14},
-    "ilioupoli":     {"price_sqm": 1800, "rent_sqm": 8.5},
-    "byronas":       {"price_sqm": 1900, "rent_sqm": 9},
-    "athens-center": {"price_sqm": 2000, "rent_sqm": 10},
-    "kolonaki":      {"price_sqm": 4500, "rent_sqm": 18},
-    "neos-kosmos":   {"price_sqm": 2400, "rent_sqm": 11},
-    "default":       {"price_sqm": 2200, "rent_sqm": 10}
+    "nea-smyrni": {
+      "price_sqm": 2800,
+      "rent_sqm": 12
+    },
+    "kallithea": {
+      "price_sqm": 2200,
+      "rent_sqm": 10
+    },
+    "palaio-faliro": {
+      "price_sqm": 3200,
+      "rent_sqm": 13
+    },
+    "glyfada": {
+      "price_sqm": 3500,
+      "rent_sqm": 14
+    },
+    "ilioupoli": {
+      "price_sqm": 1800,
+      "rent_sqm": 8.5
+    },
+    "byronas": {
+      "price_sqm": 1900,
+      "rent_sqm": 9
+    },
+    "athens-center": {
+      "price_sqm": 2000,
+      "rent_sqm": 10
+    },
+    "kolonaki": {
+      "price_sqm": 4500,
+      "rent_sqm": 18
+    },
+    "neos-kosmos": {
+      "price_sqm": 2400,
+      "rent_sqm": 11
+    },
+    "default": {
+      "price_sqm": 2200,
+      "rent_sqm": 10
+    }
   }
 }
