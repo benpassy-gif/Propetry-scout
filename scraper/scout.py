@@ -1,7 +1,10 @@
 """
-Property Scout v3 - Playwright Edition
-Uses headless browser to bypass anti-bot protections
-Supports: Spitogatos, XE.gr, Rightmove
+Property Scout v3.1 - Playwright Edition with All Features
+- Multi-profile support
+- Floor filtering and display
+- Subtle emojis in Telegram messages
+- Max 4 alerts per run (best deals first)
+- Auctions sent separately
 """
 
 import os
@@ -133,7 +136,6 @@ def make_listing(source, href, title, price, sqm, floor, area, desc, profile_id,
 
 
 def scrape_spitogatos_playwright(page, area, filters, profile_id, benchmarks, renov_cost):
-    """Scrape Spitogatos using Playwright headless browser."""
     listings = []
     base = "https://www.spitogatos.gr"
     url = (
@@ -145,15 +147,13 @@ def scrape_spitogatos_playwright(page, area, filters, profile_id, benchmarks, re
 
     try:
         page.goto(url, timeout=30000, wait_until="domcontentloaded")
-        # Wait for property cards or "no results" message
         try:
             page.wait_for_selector('a[href*="/property/"], .no-results', timeout=10000)
         except PlaywrightTimeout:
             log.warning("Spitogatos %s: no listings selector found", area)
 
-        time.sleep(2)  # Let JS settle
+        time.sleep(2)
 
-        # Extract listings via JavaScript
         results = page.evaluate("""
         () => {
           const cards = document.querySelectorAll('a[href*="/property/"]');
@@ -175,21 +175,19 @@ def scrape_spitogatos_playwright(page, area, filters, profile_id, benchmarks, re
             try:
                 href = item["href"]
                 text = item["text"]
-
-                # Price - look for € followed by number
-                price_match = re.search(r"€\s*([\d.,]+)", text)
+                price_match = re.search(r"\u20ac\s*([\d.,]+)", text)
                 price = parse_number(price_match.group(1)) if price_match else None
-
-                # Sqm - number followed by m²
-                sqm_match = re.search(r"(\d+)\s*m[²2]", text)
+                sqm_match = re.search(r"(\d+)\s*m[\u00b22]", text)
                 sqm = float(sqm_match.group(1)) if sqm_match else None
-
-                # Title - first line usually
                 title = text.split("\n")[0][:80] if text else "Apartment"
-
-                # Floor
                 floor_match = re.search(r"(\d+)(?:st|nd|rd|th)\s*floor", text, re.IGNORECASE)
                 floor = int(floor_match.group(1)) if floor_match else None
+                # Also check for ground/basement
+                if floor is None:
+                    if re.search(r"ground\s*floor", text, re.IGNORECASE):
+                        floor = 0
+                    elif re.search(r"basement|semi.basement", text, re.IGNORECASE):
+                        floor = -1
 
                 l = make_listing("spitogatos", href, title, price, sqm, floor, area, text, profile_id, filters, benchmarks, renov_cost)
                 if l:
@@ -205,7 +203,6 @@ def scrape_spitogatos_playwright(page, area, filters, profile_id, benchmarks, re
 
 
 def scrape_xe_playwright(page, area, filters, profile_id, benchmarks, renov_cost):
-    """Scrape XE.gr using Playwright."""
     listings = []
     xe_area_map = {
         "nea-smyrni": "nea-smyrni-attiki",
@@ -257,9 +254,9 @@ def scrape_xe_playwright(page, area, filters, profile_id, benchmarks, renov_cost
             try:
                 href = item["href"]
                 text = item["text"]
-                price_match = re.search(r"€\s*([\d.,]+)", text)
+                price_match = re.search(r"\u20ac\s*([\d.,]+)", text)
                 price = parse_number(price_match.group(1)) if price_match else None
-                sqm_match = re.search(r"(\d+)\s*(?:m[²2]|\u03c4\.\u03bc)", text)
+                sqm_match = re.search(r"(\d+)\s*(?:m[\u00b22]|\u03c4\.\u03bc)", text)
                 sqm = float(sqm_match.group(1)) if sqm_match else None
                 title = text.split("\n")[0][:80] if text else "Apartment"
 
@@ -277,7 +274,6 @@ def scrape_xe_playwright(page, area, filters, profile_id, benchmarks, renov_cost
 
 
 def scrape_rightmove_playwright(page, area, filters, profile_id, benchmarks, renov_cost):
-    """Scrape Rightmove using Playwright."""
     listings = []
     rightmove_areas = {
         "nea-smyrni": "REGION%5E87528",
@@ -329,10 +325,9 @@ def scrape_rightmove_playwright(page, area, filters, profile_id, benchmarks, ren
             try:
                 href = item["href"]
                 text = item["text"]
-                # Rightmove can show £ or € depending on currency
-                price_match = re.search(r"[€£]\s*([\d.,]+)", text)
+                price_match = re.search(r"[\u20ac\u00a3]\s*([\d.,]+)", text)
                 price = parse_number(price_match.group(1)) if price_match else None
-                sqm_match = re.search(r"(\d+)\s*(?:sq\.?\s*m|m[²2])", text, re.IGNORECASE)
+                sqm_match = re.search(r"(\d+)\s*(?:sq\.?\s*m|m[\u00b22])", text, re.IGNORECASE)
                 sqm = float(sqm_match.group(1)) if sqm_match else None
                 title = text.split("\n")[0][:80] if text else "Property"
 
@@ -389,6 +384,7 @@ def save_results(data):
 
 
 def format_message(l, profile_name):
+    """Format a Telegram message with subtle emojis."""
     score_bar = "#" * l.deal_score + "-" * (7 - l.deal_score)
     disc = (l.discount_vs_market * 100) if l.discount_vs_market else 0
     roi = (l.estimated_flip_roi * 100) if l.estimated_flip_roi else 0
@@ -400,16 +396,26 @@ def format_message(l, profile_name):
     area_clean = l.area.replace("-", " ").title()
     source_map = {"spitogatos": "Spitogatos", "xe": "XE.gr", "rightmove": "Rightmove"}
 
+    # Floor display
     floor_str = ""
     if l.floor is not None:
-        if l.floor == -1: floor_str = " | basement"
-        elif l.floor == 0: floor_str = " | ground"
-        else: floor_str = " | floor {}".format(l.floor)
+        if l.floor == -1:
+            floor_str = " \u00b7 basement"
+        elif l.floor == 0:
+            floor_str = " \u00b7 ground"
+        else:
+            floor_str = " \u00b7 floor {}".format(l.floor)
 
+    # Subtle emoji based on score
     if l.is_auction:
         header = "\u2696\ufe0f AUCTION ALERT"
     else:
-        score_emoji = "\U0001f525" if l.deal_score >= 6 else "\u2728" if l.deal_score >= 4 else "\U0001f4cc"
+        if l.deal_score >= 6:
+            score_emoji = "\U0001f525"  # fire
+        elif l.deal_score >= 4:
+            score_emoji = "\u2728"      # sparkles
+        else:
+            score_emoji = "\U0001f4cc"  # pin
         header = "{} Score {}/7 [{}]".format(score_emoji, l.deal_score, score_bar)
 
     lines = [
@@ -444,14 +450,14 @@ def send_telegram(message):
 
 
 def run_profile(profile, benchmarks, seen, results, page):
-    """Run scraping for a single profile."""
     name = profile["name"]
     pid = profile["id"]
     filters = profile["filters"]
     renov = profile.get("renovation_cost_per_sqm", 800)
+    max_alerts = filters.get("max_alerts_per_run", 4)
 
     log.info("=" * 60)
-    log.info("Running profile: %s (%s)", name, pid)
+    log.info("Running profile: %s (%s) - max %d alerts", name, pid, max_alerts)
     log.info("=" * 60)
 
     all_listings = []
@@ -465,13 +471,12 @@ def run_profile(profile, benchmarks, seen, results, page):
 
     log.info("Profile %s: %d total listings fetched", pid, len(all_listings))
 
-new_count = 0
+    # Sort by best deal score first so top deals are sent
+    all_listings.sort(key=lambda x: x.deal_score, reverse=True)
+
+    new_count = 0
     auction_count = 0
     min_score = filters.get("min_deal_score", 3)
-    max_alerts = filters.get("max_alerts_per_run", 4)
-
-    # Sort by deal score descending so we send the BEST deals first
-    all_listings.sort(key=lambda x: x.deal_score, reverse=True)
 
     for l in all_listings:
         if l.id in seen:
@@ -487,7 +492,7 @@ new_count = 0
 
         msg = format_message(l, name)
         if l.is_auction:
-            send_telegram("\u2696\ufe0f AUCTION\n\n" + msg)
+            send_telegram(msg)
             auction_count += 1
         elif l.deal_score >= min_score and new_count < max_alerts:
             send_telegram(msg)
@@ -506,7 +511,7 @@ new_count = 0
 
 
 def main():
-    log.info("=== Property Scout v3 (Playwright) starting ===")
+    log.info("=== Property Scout v3.1 starting ===")
     profile_filter = os.environ.get("PROFILE_ID", "").strip()
 
     data = load_profiles()
@@ -528,7 +533,6 @@ def main():
     seen = load_seen()
     results = load_results()
 
-    # Launch Playwright once for all profiles
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True, args=[
             "--disable-blink-features=AutomationControlled",
@@ -539,7 +543,6 @@ def main():
             locale="el-GR",
             viewport={"width": 1366, "height": 768},
         )
-        # Stealth: hide webdriver flag
         context.add_init_script(
             "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
         )
@@ -572,18 +575,18 @@ def main():
     total_new = sum(r.get("new_alerts", 0) for r in run_summary)
     total_auctions = sum(r.get("auctions", 0) for r in run_summary)
     summary_lines = [
-        "Scout Summary",
-        "Time: {} UTC".format(datetime.utcnow().strftime("%d/%m/%Y %H:%M")),
+        "\U0001f4cb Scout Summary",
+        "\U0001f550 {} UTC".format(datetime.utcnow().strftime("%d/%m/%Y %H:%M")),
         "",
     ]
     for r in run_summary:
         if "error" in r:
-            summary_lines.append("[X] {}: {}".format(r["profile_name"], r["error"][:50]))
+            summary_lines.append("\u274c {}: {}".format(r["profile_name"], r["error"][:50]))
         else:
-            summary_lines.append("[OK] {}: {} fetched, {} alerts, {} auctions".format(
+            summary_lines.append("\u2705 {}: {} fetched, {} alerts, {} auctions".format(
                 r["profile_name"], r["fetched"], r["new_alerts"], r["auctions"]
             ))
-    summary_lines.extend(["", "Total: {} alerts, {} auctions".format(total_new, total_auctions)])
+    summary_lines.extend(["", "Total: {} alerts \u00b7 {} auctions".format(total_new, total_auctions)])
     send_telegram("\n".join(summary_lines))
 
     log.info("=== Done ===")
