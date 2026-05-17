@@ -575,6 +575,24 @@
       "new_alerts": 4,
       "auctions": 0,
       "timestamp": "2026-05-15T15:40:10.579771"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 45,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-17T09:09:47.256470"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 30,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-17T09:10:28.712876"
     }
   ]
 }
