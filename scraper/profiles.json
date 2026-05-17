@@ -53,7 +53,7 @@
       "id": "deep-discount",
       "name": "Deep Discount Hunter",
       "description": "Find properties significantly below market price",
-      "active": false,
+      "active": true,
       "filters": {
         "areas": [
           "nea-smyrni",
