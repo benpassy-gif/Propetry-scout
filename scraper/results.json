@@ -461,6 +461,28 @@
       "estimated_rent_yield": 0.03774403470715835,
       "total_cost": 599300,
       "arv": 464000
+    },
+    {
+      "id": "4d96c7efbb82",
+      "source": "spitogatos",
+      "title": "Apartment, 100m²",
+      "url": "https://www.spitogatos.gr/en/property/1119361538",
+      "price": 179000,
+      "sqm": 100.0,
+      "floor": null,
+      "area": "nea-smyrni",
+      "price_per_sqm": 1790.0,
+      "is_auction": false,
+      "description": "Apartment, 100m²\nNea Smyrni (Athens - South)\n\nIn Nea Smyrni, in a very good location, an elevated ground floor apartment, measuring 100 sq m, is for sale. It consists of a spacious and bright living room, dining area, separate kitchen, two bedrooms with wooden floors and a recently renovated bathroo",
+      "scraped_at": "2026-05-17T12:05:20.612551",
+      "profile_id": "flip-athens-cheap",
+      "deal_score": 4,
+      "discount_vs_market": -0.3607142857142857,
+      "estimated_renovation": 80000,
+      "estimated_flip_roi": 0.01777470829849878,
+      "estimated_rent_yield": 0.052342699283922794,
+      "total_cost": 275110,
+      "arv": 280000
     }
   ],
   "runs": [
@@ -602,6 +624,15 @@
       "price_changes": 0,
       "auctions": 0,
       "timestamp": "2026-05-17T12:04:13.452310"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 98,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-17T12:05:55.879695"
     }
   ]
 }
