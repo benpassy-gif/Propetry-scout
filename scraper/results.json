@@ -923,6 +923,50 @@
       "estimated_rent_yield": 0.07027961362480935,
       "total_cost": 98350,
       "arv": 134400
+    },
+    {
+      "id": "6eb75752b5d9",
+      "source": "spitogatos",
+      "title": "Apartment, 48m²",
+      "url": "https://www.spitogatos.gr/en/property/1119146456",
+      "price": 55000,
+      "sqm": 48.0,
+      "floor": null,
+      "area": "nea-smyrni",
+      "price_per_sqm": 1145.8333333333333,
+      "is_auction": false,
+      "description": "Apartment, 48m²\nAgios Sostis (Nea Smyrni)\n\nProperty Code: S-253 - Apartment FOR SALE in Nea Smyrni Agios Sostis for € 55.000 . This 48.00 sq. m. Apartment is on the Semi Basement and features 1 Bedroom, Livingroom, Kitchen, bathroom . The property also boasts tiled floor, view of the Urban landscape",
+      "scraped_at": "2026-05-18T10:15:47.863564",
+      "profile_id": "deep-discount",
+      "deal_score": 7,
+      "discount_vs_market": -0.5907738095238095,
+      "estimated_renovation": 38400,
+      "estimated_flip_roi": 0.3665480427046263,
+      "estimated_rent_yield": 0.07027961362480935,
+      "total_cost": 98350,
+      "arv": 134400
+    },
+    {
+      "id": "9e20bae117d2",
+      "source": "spitogatos",
+      "title": "Detached house, 210m²",
+      "url": "https://www.spitogatos.gr/en/property/1119730401",
+      "price": 310000,
+      "sqm": 210.0,
+      "floor": null,
+      "area": "ilioupoli",
+      "price_per_sqm": 1476.1904761904761,
+      "is_auction": false,
+      "description": "Detached house, 210m²\nAno Ilioupoli (Ilioupoli)\n\nProperty Code: 83653 - House FOR SALE in Ilioupoli Ano Ilioupoli for € 310.000 . This 210.00 sq. m. House consists of 2 levels and features 2 Bedrooms, Livingroom, Kitchen, bathroom and a WC. The property also boasts Heating system: Individual - Petro",
+      "scraped_at": "2026-05-18T10:16:41.253763",
+      "profile_id": "deep-discount",
+      "deal_score": 4,
+      "discount_vs_market": -0.1798941798941799,
+      "estimated_renovation": 168000,
+      "estimated_flip_roi": -0.25281676220596955,
+      "estimated_rent_yield": 0.04234038347499506,
+      "total_cost": 505900,
+      "arv": 378000
     }
   ],
   "runs": [
@@ -1181,6 +1225,15 @@
       "price_changes": 0,
       "auctions": 0,
       "timestamp": "2026-05-18T06:48:02.058098"
+    },
+    {
+      "profile_id": "deep-discount",
+      "profile_name": "Deep Discount Hunter",
+      "fetched": 111,
+      "new_alerts": 1,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-18T10:16:50.862107"
     }
   ]
 }
