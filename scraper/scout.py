@@ -1,9 +1,11 @@
 """
-Property Scout Greece - v4.1
+Property Scout Greece - v4.2
 - Emoji formatting matching original style
 - Deduplication with price tracking (seen_listings.json)
 - All listings with score >= 4 sent (no cap)
 - Two daily runs: 07:00 + 19:00 Israel time
+- Spitogatos floor mapping: Basement/LG/G/UG/1st...
+- Floor filter sent as URL params to Spitogatos
 """
 
 import os
@@ -190,13 +192,66 @@ def make_listing(source, href, title, price, sqm, floor, area, desc, profile_id,
     return l
 
 
+# Spitogatos floor name → numeric value mapping
+# Basement=-2, LG=-1, G=0, UG=1, 1st=1, 2nd=2, ...
+SPITOGATOS_FLOOR_MAP = {
+    "basement": -2,
+    "lower ground": -1,
+    "lg": -1,
+    "ground floor": 0,
+    "ground": 0,
+    "g": 0,
+    "upper ground": 1,
+    "ug": 1,
+    "1st": 1, "2nd": 2, "3rd": 3, "4th": 4, "5th": 5,
+    "6th": 6, "7th": 7, "8th": 8, "9th": 9, "10th": 10,
+}
+
+# Spitogatos floor URL codes (from their filter system)
+# basement=1, lower_ground=2, ground=3, upper_ground=4, 1st=5, 2nd=6 ...
+SPITOGATOS_FLOOR_CODES = {
+    -2: "1",   # Basement
+    -1: "2",   # Lower Ground
+     0: "3",   # Ground
+     1: "4",   # Upper Ground / 1st
+     2: "5",
+     3: "6",
+     4: "7",
+     5: "8",
+     6: "9",
+     7: "10",
+}
+
+def parse_spitogatos_floor(text: str) -> Optional[int]:
+    text_lower = text.lower()
+    for label, val in SPITOGATOS_FLOOR_MAP.items():
+        if label in text_lower:
+            return val
+    # fallback: look for "Xth floor" or "floor X"
+    m = re.search(r"(\d+)(?:st|nd|rd|th)?\s*floor", text_lower)
+    if m:
+        return int(m.group(1))
+    return None
+
+
 # ── Scrapers ───────────────────────────────────────────────────────────────────
 def scrape_spitogatos(page, area, filters, profile_id, benchmarks, renov_cost):
     listings = []
+
+    # Build URL with price + size filters
+    # Floor filter: send all floor codes from min_floor to max_floor
+    min_floor = filters.get("min_floor", -2)
+    max_floor = filters.get("max_floor", 10)
+    floor_params = ""
+    for numeric, code in SPITOGATOS_FLOOR_CODES.items():
+        if min_floor <= numeric <= max_floor:
+            floor_params += f"&floor[]={code}"
+
     url = (
         "https://www.spitogatos.gr/en/for_sale-homes/" + area
         + "?price[]=" + str(filters["min_price"]) + "%2C" + str(filters["max_price"])
         + "&areas[]=" + str(filters["min_sqm"]) + "%2C" + str(filters["max_sqm"])
+        + floor_params
     )
     log.info("Spitogatos: %s", url)
     try:
@@ -228,7 +283,7 @@ def scrape_spitogatos(page, area, filters, profile_id, benchmarks, renov_cost):
                 sqm_m = re.search(r"(\d+)\s*m[\u00b22]", text)
                 sqm = float(sqm_m.group(1)) if sqm_m else None
                 floor_m = re.search(r"(\d+)(?:st|nd|rd|th)\s*floor", text, re.IGNORECASE)
-                floor = int(floor_m.group(1)) if floor_m else None
+                floor = int(floor_m.group(1)) if floor_m else parse_spitogatos_floor(text)
                 title = text.split("\n")[0][:80] if text else "Apartment"
                 l = make_listing("spitogatos", href, title, price, sqm, floor, area, text, profile_id, filters, benchmarks, renov_cost)
                 if l: listings.append(l)
