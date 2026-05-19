@@ -297,58 +297,87 @@ def scrape_spitogatos(page, area, filters, profile_id, benchmarks, renov_cost):
 
 def scrape_xe(page, area, filters, profile_id, benchmarks, renov_cost):
     listings = []
-    xe_map = {
-        "nea-smyrni": "nea-smyrni-attiki", "kallithea": "kallithea-attiki",
-        "palaio-faliro": "palaio-faliro-attiki", "glyfada": "glyfada-attiki",
-        "ilioupoli": "ilioupoli-attiki",
+    # XE.gr new URL format (2025): /en/property/r/apartment-for-sale/<place-id>_<slug>
+    # Place IDs taken from XE.gr search results
+    xe_place_map = {
+        "nea-smyrni":    "ChIJM3OFEly9oRQRVBiTBzlCMDc_nea-smyrni",
+        "kallithea":     "ChIJw7AEqla9oRQRgZbMHahZSFs_kallithea",
+        "palaio-faliro": "ChIJiaiuGqC9oRQRdmMfD8cMLSY_palaio-faliro",
+        "glyfada":       "ChIJpxbHN_e9oRQRCkX_yFWHKwQ_glyfada",
+        "ilioupoli":     "ChIJpT7gJbK9oRQRvZfAEOOlJww_ilioupoli",
+        "byronas":       "ChIJ8RzNYL29oRQRtf_EEMaYNkI_vyronas",
+        "athens-center": "ChIJ8UNwBh-9oRQR3Y1mdkU1Nic_athens",
+        "neos-kosmos":   "ChIJcybCQLO9oRQR3F_YGRa3SJk_neos-kosmos",
     }
-    slug = xe_map.get(area, area)
+    place_id = xe_place_map.get(area)
+    if not place_id:
+        log.warning("XE: no place ID for area %s", area)
+        return listings
+
+    # New URL format with price/size filters as query params
     url = (
-        "https://www.xe.gr/property/results/"
-        + "?Transaction.type_channel=117518&Item.category=117541"
-        + "&geo_place_ids=" + slug
-        + "&Item.price.from=" + str(filters["min_price"])
-        + "&Item.price.to=" + str(filters["max_price"])
-        + "&Item.area.from=" + str(filters["min_sqm"])
-        + "&Item.area.to=" + str(filters["max_sqm"])
+        f"https://www.xe.gr/en/property/r/apartment-for-sale/{place_id}"
+        f"?minimum_price={filters['min_price']}"
+        f"&maximum_price={filters['max_price']}"
+        f"&minimum_level_size={filters['min_sqm']}"
+        f"&maximum_level_size={filters['max_sqm']}"
     )
     log.info("XE: %s", url)
     try:
         page.goto(url, timeout=30000, wait_until="domcontentloaded")
         try:
-            page.wait_for_selector('a[href*="/property/"], [class*="result"]', timeout=10000)
+            # XE uses React — wait for listing cards to appear
+            page.wait_for_selector(
+                'a[href*="/en/property/d/"], [data-testid="property-ad-item"], .property-ad',
+                timeout=12000
+            )
         except PlaywrightTimeout:
-            pass
-        time.sleep(2)
+            log.warning("XE %s: listings selector timeout", area)
+
+        time.sleep(3)
+
         results = page.evaluate("""
         () => {
-          const cards = document.querySelectorAll('a[href*="/property/"]');
+          // XE new format: listing links contain /en/property/d/
+          const cards = document.querySelectorAll('a[href*="/en/property/d/"]');
           const seen = new Set(); const out = [];
           cards.forEach(card => {
             const href = card.href;
             if (seen.has(href)) return; seen.add(href);
-            const container = card.closest('article, li, div');
+            // Walk up to find the listing card container
+            let container = card.closest('[data-testid="property-ad-item"]')
+                         || card.closest('article')
+                         || card.closest('li')
+                         || card.parentElement;
             const text = container ? container.innerText : card.innerText;
-            out.push({ href, text });
+            if (text && text.length > 20) out.push({ href, text });
           });
           return out;
         }
         """)
+
+        log.info("XE %s: raw results: %d", area, len(results))
         for item in results[:25]:
             try:
                 href = item["href"]; text = item["text"]
+                # Price: look for € followed by number
                 price_m = re.search(r"\u20ac\s*([\d.,]+)", text)
                 price = parse_number(price_m.group(1)) if price_m else None
-                sqm_m = re.search(r"(\d+)\s*(?:m[\u00b22]|\u03c4\.\u03bc)", text)
+                # Size: number followed by m² or τ.μ (Greek sq meter abbreviation)
+                sqm_m = re.search(r"(\d+)\s*(?:m[\u00b22]|\u03c4\.\u03bc\.?)", text)
                 sqm = float(sqm_m.group(1)) if sqm_m else None
+                # Floor
+                floor_m = re.search(r"(\d+)(?:st|nd|rd|th)?\s*(?:floor|\u03cc\u03c1\u03bf\u03c6\u03bf\u03c2)", text, re.IGNORECASE)
+                floor = int(floor_m.group(1)) if floor_m else None
                 title = text.split("\n")[0][:80] if text else "Apartment"
-                l = make_listing("xe", href, title, price, sqm, None, area, text, profile_id, filters, benchmarks, renov_cost)
+                l = make_listing("xe", href, title, price, sqm, floor, area, text,
+                                 profile_id, filters, benchmarks, renov_cost)
                 if l: listings.append(l)
             except Exception as e:
                 log.debug("XE card: %s", e)
     except Exception as e:
         log.warning("XE %s: %s", area, e)
-    log.info("XE %s: %d", area, len(listings))
+    log.info("XE %s: %d listings", area, len(listings))
     return listings
 
 
@@ -363,34 +392,43 @@ def scrape_rightmove(page, area, filters, profile_id, benchmarks, renov_cost):
     if not loc:
         return listings
     url = (
-        "https://www.rightmove.co.uk/overseas-property/in-Greece.html"
-        + "?locationIdentifier=" + loc
-        + "&minPrice=" + str(filters["min_price"])
-        + "&maxPrice=" + str(filters["max_price"])
-        + "&propertyTypes=flat"
+        f"https://www.rightmove.co.uk/overseas-property/in-Greece.html"
+        f"?locationIdentifier={loc}"
+        f"&minPrice={filters['min_price']}"
+        f"&maxPrice={filters['max_price']}"
+        f"&propertyTypes=flat&mustHave=&dontShow=&furnishTypes=&keywords="
     )
     log.info("Rightmove: %s", url)
     try:
         page.goto(url, timeout=30000, wait_until="domcontentloaded")
         try:
-            page.wait_for_selector('a[href*="/properties/"], .propertyCard', timeout=10000)
+            page.wait_for_selector(
+                'a[href*="/properties/"], [data-test="property-details"], .propertyCard',
+                timeout=12000
+            )
         except PlaywrightTimeout:
-            pass
-        time.sleep(2)
+            log.warning("Rightmove %s: selector timeout", area)
+        time.sleep(3)
         results = page.evaluate("""
         () => {
           const cards = document.querySelectorAll('a[href*="/properties/"]');
           const seen = new Set(); const out = [];
           cards.forEach(card => {
             const href = card.href;
+            if (!href.includes('/properties/')) return;
             if (seen.has(href)) return; seen.add(href);
-            const container = card.closest('.propertyCard, article, div');
+            const container = card.closest('[data-test="property-details"]')
+                           || card.closest('.propertyCard')
+                           || card.closest('article')
+                           || card.closest('li')
+                           || card.parentElement;
             const text = container ? container.innerText : card.innerText;
-            out.push({ href, text });
+            if (text && text.length > 20) out.push({ href, text });
           });
           return out;
         }
         """)
+        log.info("Rightmove %s: raw results: %d", area, len(results))
         for item in results[:15]:
             try:
                 href = item["href"]; text = item["text"]
@@ -399,13 +437,14 @@ def scrape_rightmove(page, area, filters, profile_id, benchmarks, renov_cost):
                 sqm_m = re.search(r"(\d+)\s*(?:sq\.?\s*m|m[\u00b22])", text, re.IGNORECASE)
                 sqm = float(sqm_m.group(1)) if sqm_m else None
                 title = text.split("\n")[0][:80] if text else "Property"
-                l = make_listing("rightmove", href, title, price, sqm, None, area, text, profile_id, filters, benchmarks, renov_cost)
+                l = make_listing("rightmove", href, title, price, sqm, None, area, text,
+                                 profile_id, filters, benchmarks, renov_cost)
                 if l: listings.append(l)
             except Exception as e:
                 log.debug("Rightmove card: %s", e)
     except Exception as e:
         log.warning("Rightmove %s: %s", area, e)
-    log.info("Rightmove %s: %d", area, len(listings))
+    log.info("Rightmove %s: %d listings", area, len(listings))
     return listings
 
 
