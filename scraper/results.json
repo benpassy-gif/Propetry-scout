@@ -1668,6 +1668,39 @@
       "profile_name": "Nea Smyrni Cheap",
       "error": "'areas'",
       "timestamp": "2026-05-19T12:41:15.755854"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 45,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-19T14:13:47.174048"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 30,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-19T14:14:28.283897"
+    },
+    {
+      "profile_id": "deep-discount",
+      "profile_name": "Deep Discount Hunter",
+      "fetched": 75,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-19T14:16:11.667922"
+    },
+    {
+      "profile_id": "nea-smyrni-cheap",
+      "profile_name": "Nea Smyrni Cheap",
+      "error": "'areas'",
+      "timestamp": "2026-05-19T14:16:11.668068"
     }
   ]
 }
