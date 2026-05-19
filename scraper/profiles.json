@@ -75,6 +75,26 @@
       "target_mode": "flip",
       "created_at": "2026-05-12T00:00:00",
       "last_run": "2026-05-18T20:57:25.279197"
+    },
+    {
+      "id": "nea-smyrni-cheap",
+      "name": "Nea Smyrni Cheap",
+      "description": "",
+      "active": true,
+      "filters": {
+        "min_sqm": 40,
+        "max_sqm": 400,
+        "min_price": 0,
+        "max_price": 100000,
+        "min_floor": -1,
+        "max_floor": 10,
+        "max_price_per_sqm": 1100,
+        "min_deal_score": 4
+      },
+      "renovation_cost_per_sqm": 800,
+      "target_mode": "flip",
+      "created_at": "2026-05-19T12:40:23.039Z",
+      "last_run": null
     }
   ],
   "area_benchmarks": {
