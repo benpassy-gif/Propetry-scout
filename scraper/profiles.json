@@ -23,7 +23,7 @@
       "renovation_cost_per_sqm": 800,
       "target_mode": "flip",
       "created_at": "2026-05-12T00:00:00",
-      "last_run": "2026-05-20T12:42:53.132393"
+      "last_run": "2026-05-20T22:13:50.483324"
     },
     {
       "id": "rental-south",
@@ -47,7 +47,7 @@
       "renovation_cost_per_sqm": 600,
       "target_mode": "rent",
       "created_at": "2026-05-12T00:00:00",
-      "last_run": "2026-05-20T12:44:10.697727"
+      "last_run": "2026-05-20T22:15:04.837513"
     },
     {
       "id": "deep-discount",
@@ -74,7 +74,7 @@
       "renovation_cost_per_sqm": 800,
       "target_mode": "flip",
       "created_at": "2026-05-12T00:00:00",
-      "last_run": "2026-05-20T12:47:20.628946"
+      "last_run": "2026-05-20T22:18:11.110019"
     },
     {
       "id": "nea-smyrni-cheap",
