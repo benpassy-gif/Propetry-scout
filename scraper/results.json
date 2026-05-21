@@ -1781,44 +1781,75 @@
       "estimated_rent_yield": 0.04234038347499506,
       "total_cost": 505900,
       "arv": 378000
+    },
+    {
+      "id": "70dfb77c4f14",
+      "source": "spitogatos",
+      "title": "Apartment, 125m²",
+      "url": "https://www.spitogatos.gr/en/property/1119871293",
+      "price": 198000,
+      "sqm": 125.0,
+      "floor": 1,
+      "area": "ilioupoli",
+      "price_per_sqm": 1584.0,
+      "is_auction": false,
+      "description": "Apartment, 125m²\nLofos Germanou (Ilioupoli)\n\n1st floor apartment in a duplex of 125 sq m. It consists of a living room, dining room, 2 bedrooms, independent kitchen and bathroom. BRIGHT AGIA MARINA ILIOUPOLIS The residence is located in an excellent location, a breath away from the central square of",
+      "scraped_at": "2026-05-21T14:24:53.412645",
+      "profile_id": "flip-athens-cheap",
+      "deal_score": 4,
+      "discount_vs_market": -0.12,
+      "estimated_renovation": 100000,
+      "estimated_flip_roi": -0.2875688683427269,
+      "estimated_rent_yield": 0.04037109746057881,
+      "total_cost": 315820,
+      "arv": 225000
+    },
+    {
+      "id": "77848a1d44f1",
+      "source": "spitogatos",
+      "title": "Apartment, 107m²",
+      "url": "https://www.spitogatos.gr/en/property/1116980953",
+      "price": 180000,
+      "sqm": 107.0,
+      "floor": 0,
+      "area": "ilioupoli",
+      "price_per_sqm": 1682.2429906542056,
+      "is_auction": false,
+      "description": "Apartment, 107m²\nAno Ilioupoli (Ilioupoli)\n\nProperty Code: 607 - Apartment FOR SALE in Ilioupoli Ano Ilioupoli for € 180.000 . This 107.00 sq. m. Apartment is on the 3 rd floor and features 2 Bedrooms, Livingroom, Kitchen, bathroom . The property also boasts Heating system: Central oil heating, tile",
+      "scraped_at": "2026-05-21T14:24:53.412948",
+      "profile_id": "flip-athens-cheap",
+      "deal_score": 1,
+      "discount_vs_market": -0.06542056074766353,
+      "estimated_renovation": 85600,
+      "estimated_flip_roi": -0.31653655074520937,
+      "estimated_rent_yield": 0.03872959545777147,
+      "total_cost": 281800,
+      "arv": 192600
+    },
+    {
+      "id": "7970def08702",
+      "source": "spitogatos",
+      "title": "Apartment, 55m²",
+      "url": "https://www.spitogatos.gr/en/property/1119798744",
+      "price": 95000,
+      "sqm": 55.0,
+      "floor": 0,
+      "area": "ilioupoli",
+      "price_per_sqm": 1727.2727272727273,
+      "is_auction": false,
+      "description": "Apartment, 55m²\nAno Ilioupoli (Ilioupoli)\n\nProperty Code: 5412 - Apartment FOR SALE in Ilioupoli Ano Ilioupoli for € 95.000 . This 55.00 sq. m. Apartment is on the Ground floor and features 1 Bedroom, Kitchen, bathroom . The property also boasts Heating system: Central oil heating, Window frames: Wo",
+      "scraped_at": "2026-05-21T14:24:53.413011",
+      "profile_id": "flip-athens-cheap",
+      "deal_score": 1,
+      "discount_vs_market": -0.040404040404040414,
+      "estimated_renovation": 44000,
+      "estimated_flip_roi": -0.3290410030498136,
+      "estimated_rent_yield": 0.03802100982717723,
+      "total_cost": 147550,
+      "arv": 99000
     }
   ],
   "runs": [
-    {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 44,
-      "new_alerts": 4,
-      "auctions": 0,
-      "timestamp": "2026-05-15T15:40:10.579771"
-    },
-    {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 45,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-05-17T09:09:47.256470"
-    },
-    {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 30,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-05-17T09:10:28.712876"
-    },
-    {
-      "profile_id": "deep-discount",
-      "profile_name": "Deep Discount Hunter",
-      "fetched": 75,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-05-17T12:04:13.452310"
-    },
     {
       "profile_id": "flip-athens-cheap",
       "profile_name": "Flip Athens - Cheap",
@@ -2208,6 +2239,39 @@
       "profile_name": "Nea Smyrni Cheap",
       "error": "'areas'",
       "timestamp": "2026-05-20T22:18:11.110183"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 69,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-21T14:25:18.394277"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 58,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-21T14:26:16.163147"
+    },
+    {
+      "profile_id": "deep-discount",
+      "profile_name": "Deep Discount Hunter",
+      "fetched": 124,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-21T14:28:44.778047"
+    },
+    {
+      "profile_id": "nea-smyrni-cheap",
+      "profile_name": "Nea Smyrni Cheap",
+      "error": "'areas'",
+      "timestamp": "2026-05-21T14:28:44.778270"
     }
   ]
 }
