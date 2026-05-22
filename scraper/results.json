@@ -1853,42 +1853,6 @@
     {
       "profile_id": "deep-discount",
       "profile_name": "Deep Discount Hunter",
-      "fetched": 75,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-05-18T06:48:02.058098"
-    },
-    {
-      "profile_id": "deep-discount",
-      "profile_name": "Deep Discount Hunter",
-      "fetched": 111,
-      "new_alerts": 1,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-05-18T10:16:50.862107"
-    },
-    {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 79,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-05-18T16:36:07.319057"
-    },
-    {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 47,
-      "new_alerts": 2,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-05-18T16:36:36.519342"
-    },
-    {
-      "profile_id": "deep-discount",
-      "profile_name": "Deep Discount Hunter",
       "fetched": 111,
       "new_alerts": 0,
       "price_changes": 0,
@@ -2263,6 +2227,39 @@
       "profile_name": "Nea Smyrni Cheap",
       "error": "'areas'",
       "timestamp": "2026-05-22T12:40:43.664540"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 12,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-22T20:56:27.974402"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 8,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-22T20:57:20.463124"
+    },
+    {
+      "profile_id": "deep-discount",
+      "profile_name": "Deep Discount Hunter",
+      "fetched": 20,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-22T20:59:27.881173"
+    },
+    {
+      "profile_id": "nea-smyrni-cheap",
+      "profile_name": "Nea Smyrni Cheap",
+      "error": "'areas'",
+      "timestamp": "2026-05-22T20:59:27.881324"
     }
   ]
 }
