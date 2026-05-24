@@ -2049,36 +2049,6 @@
   ],
   "runs": [
     {
-      "profile_id": "nea-smyrni-cheap",
-      "profile_name": "Nea Smyrni Cheap",
-      "error": "'areas'",
-      "timestamp": "2026-05-19T14:16:11.668068"
-    },
-    {
-      "profile_id": "nea-smyrni-cheap",
-      "profile_name": "Nea Smyrni Cheap",
-      "error": "'areas'",
-      "timestamp": "2026-05-19T15:19:45.680143"
-    },
-    {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 85,
-      "new_alerts": 3,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-05-19T15:23:37.501636"
-    },
-    {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 59,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-05-19T15:24:02.509247"
-    },
-    {
       "profile_id": "deep-discount",
       "profile_name": "Deep Discount Hunter",
       "fetched": 137,
@@ -2455,6 +2425,39 @@
       "profile_name": "Nea Smyrni Cheap",
       "error": "'areas'",
       "timestamp": "2026-05-24T10:26:03.328068"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 12,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-24T19:57:15.691204"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 8,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-24T19:58:28.632798"
+    },
+    {
+      "profile_id": "deep-discount",
+      "profile_name": "Deep Discount Hunter",
+      "fetched": 20,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-05-24T20:01:32.888025"
+    },
+    {
+      "profile_id": "nea-smyrni-cheap",
+      "profile_name": "Nea Smyrni Cheap",
+      "error": "'areas'",
+      "timestamp": "2026-05-24T20:01:32.888167"
     }
   ]
 }
