@@ -6,16 +6,24 @@
       "description": "Cheap apartments for flipping in central Athens",
       "active": true,
       "filters": {
-        "areas": ["nea-smyrni", "kallithea", "ilioupoli"],
-        "min_sqm": 40, "max_sqm": 90,
-        "min_price": 40000, "max_price": 100000,
-        "min_floor": -1, "max_floor": 5,
-        "max_price_per_sqm": 1800, "min_deal_score": 4
+        "areas": [
+          "nea-smyrni",
+          "kallithea",
+          "ilioupoli"
+        ],
+        "min_sqm": 40,
+        "max_sqm": 90,
+        "min_price": 40000,
+        "max_price": 100000,
+        "min_floor": -1,
+        "max_floor": 5,
+        "max_price_per_sqm": 1800,
+        "min_deal_score": 4
       },
       "renovation_cost_per_sqm": 800,
       "target_mode": "flip",
       "created_at": "2026-05-12T00:00:00",
-      "last_run": "2026-05-15T15:39:40.420096"
+      "last_run": "2026-05-28T09:00:54.860620"
     },
     {
       "id": "rental-south",
@@ -23,16 +31,23 @@
       "description": "Long-term rental in southern Athens suburbs",
       "active": true,
       "filters": {
-        "areas": ["palaio-faliro", "glyfada"],
-        "min_sqm": 50, "max_sqm": 100,
-        "min_price": 80000, "max_price": 200000,
-        "min_floor": 0, "max_floor": 5,
-        "max_price_per_sqm": 3500, "min_deal_score": 4
+        "areas": [
+          "palaio-faliro",
+          "glyfada"
+        ],
+        "min_sqm": 50,
+        "max_sqm": 100,
+        "min_price": 80000,
+        "max_price": 200000,
+        "min_floor": 0,
+        "max_floor": 5,
+        "max_price_per_sqm": 3500,
+        "min_deal_score": 4
       },
       "renovation_cost_per_sqm": 600,
       "target_mode": "rent",
       "created_at": "2026-05-12T00:00:00",
-      "last_run": "2026-05-15T15:40:10.579792"
+      "last_run": "2026-05-28T09:02:12.942752"
     },
     {
       "id": "deep-discount",
@@ -40,11 +55,21 @@
       "description": "Find properties significantly below market price",
       "active": false,
       "filters": {
-        "areas": ["nea-smyrni", "kallithea", "palaio-faliro", "glyfada", "ilioupoli"],
-        "min_sqm": 30, "max_sqm": 150,
-        "min_price": 30000, "max_price": 250000,
-        "min_floor": -1, "max_floor": 10,
-        "max_price_per_sqm": 1500, "min_deal_score": 5
+        "areas": [
+          "nea-smyrni",
+          "kallithea",
+          "palaio-faliro",
+          "glyfada",
+          "ilioupoli"
+        ],
+        "min_sqm": 30,
+        "max_sqm": 150,
+        "min_price": 30000,
+        "max_price": 250000,
+        "min_floor": -1,
+        "max_floor": 10,
+        "max_price_per_sqm": 1500,
+        "min_deal_score": 5
       },
       "renovation_cost_per_sqm": 800,
       "target_mode": "flip",
@@ -57,36 +82,134 @@
       "description": "Entire buildings for renovation and sale/Airbnb",
       "active": true,
       "filters": {
-        "areas": ["nea-smyrni", "kallithea", "ilioupoli", "neos-kosmos", "athens-center", "moschato", "tavros", "byronas"],
-        "min_sqm": 150, "max_sqm": 1000,
-        "min_price": 100000, "max_price": 800000,
-        "min_floor": -1, "max_floor": 10,
-        "max_price_per_sqm": 1500, "min_deal_score": 3
+        "areas": [
+          "nea-smyrni",
+          "kallithea",
+          "ilioupoli",
+          "neos-kosmos",
+          "athens-center",
+          "moschato",
+          "tavros",
+          "byronas"
+        ],
+        "min_sqm": 150,
+        "max_sqm": 1000,
+        "min_price": 100000,
+        "max_price": 800000,
+        "min_floor": -1,
+        "max_floor": 10,
+        "max_price_per_sqm": 1500,
+        "min_deal_score": 3
       },
       "renovation_cost_per_sqm": 700,
       "target_mode": "building",
       "property_type": "building",
       "created_at": "2026-05-20T00:00:00",
-      "last_run": null
+      "last_run": "2026-05-28T09:05:45.562378"
     }
   ],
   "area_benchmarks": {
-    "nea-smyrni":       { "price_sqm": 2800, "rent_sqm": 12,  "airbnb_night": 80,  "tourist_zone": false },
-    "kallithea":        { "price_sqm": 2200, "rent_sqm": 10,  "airbnb_night": 65,  "tourist_zone": false },
-    "palaio-faliro":    { "price_sqm": 3200, "rent_sqm": 13,  "airbnb_night": 90,  "tourist_zone": false },
-    "glyfada":          { "price_sqm": 3500, "rent_sqm": 14,  "airbnb_night": 110, "tourist_zone": false },
-    "ilioupoli":        { "price_sqm": 1800, "rent_sqm": 8.5, "airbnb_night": 55,  "tourist_zone": false },
-    "byronas":          { "price_sqm": 1900, "rent_sqm": 9,   "airbnb_night": 58,  "tourist_zone": false },
-    "athens-center":    { "price_sqm": 2000, "rent_sqm": 10,  "airbnb_night": 75,  "tourist_zone": true  },
-    "kolonaki":         { "price_sqm": 4500, "rent_sqm": 18,  "airbnb_night": 150, "tourist_zone": true  },
-    "neos-kosmos":      { "price_sqm": 2400, "rent_sqm": 11,  "airbnb_night": 70,  "tourist_zone": false },
-    "moschato":         { "price_sqm": 2200, "rent_sqm": 10,  "airbnb_night": 65,  "tourist_zone": false },
-    "tavros":           { "price_sqm": 1900, "rent_sqm": 9,   "airbnb_night": 60,  "tourist_zone": false },
-    "piraeus":          { "price_sqm": 1800, "rent_sqm": 9,   "airbnb_night": 60,  "tourist_zone": true  },
-    "peristeri":        { "price_sqm": 1600, "rent_sqm": 8,   "airbnb_night": 50,  "tourist_zone": false },
-    "alimos":           { "price_sqm": 3000, "rent_sqm": 13,  "airbnb_night": 95,  "tourist_zone": false },
-    "dafni":            { "price_sqm": 1800, "rent_sqm": 8.5, "airbnb_night": 55,  "tourist_zone": false },
-    "agios-dimitrios":  { "price_sqm": 2000, "rent_sqm": 9.5, "airbnb_night": 60,  "tourist_zone": false },
-    "default":          { "price_sqm": 2200, "rent_sqm": 10,  "airbnb_night": 65,  "tourist_zone": false }
+    "nea-smyrni": {
+      "price_sqm": 2800,
+      "rent_sqm": 12,
+      "airbnb_night": 80,
+      "tourist_zone": false
+    },
+    "kallithea": {
+      "price_sqm": 2200,
+      "rent_sqm": 10,
+      "airbnb_night": 65,
+      "tourist_zone": false
+    },
+    "palaio-faliro": {
+      "price_sqm": 3200,
+      "rent_sqm": 13,
+      "airbnb_night": 90,
+      "tourist_zone": false
+    },
+    "glyfada": {
+      "price_sqm": 3500,
+      "rent_sqm": 14,
+      "airbnb_night": 110,
+      "tourist_zone": false
+    },
+    "ilioupoli": {
+      "price_sqm": 1800,
+      "rent_sqm": 8.5,
+      "airbnb_night": 55,
+      "tourist_zone": false
+    },
+    "byronas": {
+      "price_sqm": 1900,
+      "rent_sqm": 9,
+      "airbnb_night": 58,
+      "tourist_zone": false
+    },
+    "athens-center": {
+      "price_sqm": 2000,
+      "rent_sqm": 10,
+      "airbnb_night": 75,
+      "tourist_zone": true
+    },
+    "kolonaki": {
+      "price_sqm": 4500,
+      "rent_sqm": 18,
+      "airbnb_night": 150,
+      "tourist_zone": true
+    },
+    "neos-kosmos": {
+      "price_sqm": 2400,
+      "rent_sqm": 11,
+      "airbnb_night": 70,
+      "tourist_zone": false
+    },
+    "moschato": {
+      "price_sqm": 2200,
+      "rent_sqm": 10,
+      "airbnb_night": 65,
+      "tourist_zone": false
+    },
+    "tavros": {
+      "price_sqm": 1900,
+      "rent_sqm": 9,
+      "airbnb_night": 60,
+      "tourist_zone": false
+    },
+    "piraeus": {
+      "price_sqm": 1800,
+      "rent_sqm": 9,
+      "airbnb_night": 60,
+      "tourist_zone": true
+    },
+    "peristeri": {
+      "price_sqm": 1600,
+      "rent_sqm": 8,
+      "airbnb_night": 50,
+      "tourist_zone": false
+    },
+    "alimos": {
+      "price_sqm": 3000,
+      "rent_sqm": 13,
+      "airbnb_night": 95,
+      "tourist_zone": false
+    },
+    "dafni": {
+      "price_sqm": 1800,
+      "rent_sqm": 8.5,
+      "airbnb_night": 55,
+      "tourist_zone": false
+    },
+    "agios-dimitrios": {
+      "price_sqm": 2000,
+      "rent_sqm": 9.5,
+      "airbnb_night": 60,
+      "tourist_zone": false
+    },
+    "default": {
+      "price_sqm": 2200,
+      "rent_sqm": 10,
+      "airbnb_night": 65,
+      "tourist_zone": false
+    }
   }
 }
