@@ -484,29 +484,99 @@ def send_telegram(message: str):
         log.error("Telegram: %s", e)
 
 
+# ── Building scraper (whole buildings) ────────────────────────────────────────
+def scrape_spitogatos_buildings(page, area, filters, profile_id, benchmarks, renov_cost):
+    """Search for whole buildings (polykatoikia) on Spitogatos."""
+    listings = []
+    # Spitogatos building category URL
+    url = (
+        "https://www.spitogatos.gr/en/for_sale-buildings/" + area
+        + "?price[]=" + str(filters["min_price"]) + "%2C" + str(filters["max_price"])
+        + "&areas[]=" + str(filters["min_sqm"]) + "%2C" + str(filters["max_sqm"])
+    )
+    log.info("Spitogatos Buildings: %s", url)
+    try:
+        page.goto(url, timeout=30000, wait_until="domcontentloaded")
+        try:
+            page.wait_for_selector('a[href*="/property/"], .no-results', timeout=10000)
+        except PlaywrightTimeout:
+            pass
+        time.sleep(2)
+        results = page.evaluate("""
+        () => {
+          const cards = document.querySelectorAll('a[href*="/property/"]');
+          const seen = new Set(); const out = [];
+          cards.forEach(card => {
+            const href = card.href;
+            if (seen.has(href)) return; seen.add(href);
+            const container = card.closest('article, li, div');
+            const text = container ? container.innerText : card.innerText;
+            if (text && text.length > 20) out.push({ href, text });
+          });
+          return out;
+        }
+        """)
+        for item in results[:20]:
+            try:
+                href = item["href"]; text = item["text"]
+                price_m = re.search(r"\u20ac\s*([\d.,]+)", text)
+                price = parse_number(price_m.group(1)) if price_m else None
+                sqm_m = re.search(r"(\d+)\s*m[\u00b22]", text)
+                sqm = float(sqm_m.group(1)) if sqm_m else None
+                title = text.split("\n")[0][:80] if text else "Building"
+                l = make_listing("spitogatos", href, title, price, sqm, None, area, text,
+                                 profile_id, filters, benchmarks, renov_cost)
+                if l: listings.append(l)
+            except Exception as e:
+                log.debug("Building card: %s", e)
+    except Exception as e:
+        log.warning("Buildings %s: %s", area, e)
+    log.info("Buildings %s: %d", area, len(listings))
+    return listings
+
+
 # ── Profile runner ─────────────────────────────────────────────────────────────
 def run_profile(profile, benchmarks, seen, results, page):
     name = profile["name"]; pid = profile["id"]
     filters = profile["filters"]
     renov = profile.get("renovation_cost_per_sqm", 800)
+    is_building = profile.get("property_type") == "building"
     log.info("=" * 50)
-    log.info("Profile: %s", name)
+    log.info("Profile: %s (building=%s)", name, is_building)
 
     all_listings = []
     for area in filters["areas"]:
-        all_listings.extend(scrape_spitogatos(page, area, filters, pid, benchmarks, renov)); time.sleep(1)
-        all_listings.extend(scrape_xe(page, area, filters, pid, benchmarks, renov)); time.sleep(1)
-        all_listings.extend(scrape_rightmove(page, area, filters, pid, benchmarks, renov)); time.sleep(1)
+        # For building profiles, use building-specific scrapers
+        if is_building:
+            all_listings.extend(scrape_spitogatos_buildings(page, area, filters, pid, benchmarks, renov))
+        else:
+            all_listings.extend(scrape_spitogatos(page, area, filters, pid, benchmarks, renov))
+        time.sleep(1)
+        all_listings.extend(scrape_xe(page, area, filters, pid, benchmarks, renov))
+        time.sleep(1)
+        if not is_building:
+            all_listings.extend(scrape_rightmove(page, area, filters, pid, benchmarks, renov))
+            time.sleep(1)
 
-    log.info("Total: %d", len(all_listings))
-    new_count = price_change_count = auction_count = 0
+    log.info("Total fetched: %d", len(all_listings))
 
+    # Filter by floor
+    filtered = []
     for l in all_listings:
         if not l.price or not l.sqm:
             continue
         if l.floor is not None:
             if l.floor < filters.get("min_floor", -10) or l.floor > filters.get("max_floor", 100):
                 continue
+        filtered.append(l)
+
+    # ── SORT BY SCORE (highest first) before sending ──
+    filtered.sort(key=lambda x: x.deal_score, reverse=True)
+    log.info("After filtering: %d | Sorted by score", len(filtered))
+
+    new_count = price_change_count = auction_count = 0
+
+    for l in filtered:
         already_seen = l.id in seen
         send_it = is_new_or_price_changed(l, seen)
         price_changed = already_seen and send_it
