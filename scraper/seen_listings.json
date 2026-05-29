@@ -82,7 +82,7 @@
   "4abd7f3de17e": {
     "price": 310000,
     "url": "https://www.spitogatos.gr/en/property/1117963209",
-    "last_seen": "2026-05-18T16:36:36.019017"
+    "last_seen": "2026-05-29T14:22:33.396214"
   },
   "1cec6f7c9be6": {
     "price": 245000,
@@ -92,12 +92,12 @@
   "c0edc83f3bd3": {
     "price": 380000,
     "url": "https://www.spitogatos.gr/en/property/1118126633",
-    "last_seen": "2026-05-18T16:36:34.961937"
+    "last_seen": "2026-05-29T14:22:33.396308"
   },
   "c42b75fabfd5": {
     "price": 310000,
     "url": "https://www.spitogatos.gr/en/property/1118819250",
-    "last_seen": "2026-05-18T16:36:36.018931"
+    "last_seen": "2026-05-29T14:22:33.396345"
   },
   "429eeb0fe0a7": {
     "price": 470000,
@@ -117,7 +117,7 @@
   "70dfb77c4f14": {
     "price": 198000,
     "url": "https://www.spitogatos.gr/en/property/1119871293",
-    "last_seen": "2026-05-25T14:23:31.660257"
+    "last_seen": "2026-05-29T14:21:31.519254"
   },
   "b66e9815ac1e": {
     "price": 510000,
@@ -162,7 +162,7 @@
   "2debb8fdd447": {
     "price": 310000,
     "url": "https://www.spitogatos.gr/en/property/1119730401",
-    "last_seen": "2026-05-24T10:22:41.563762"
+    "last_seen": "2026-05-29T14:21:31.519303"
   },
   "d6757b7e87ec": {
     "price": 200000,
@@ -177,7 +177,7 @@
   "cfcb05773149": {
     "price": 250000,
     "url": "https://www.spitogatos.gr/en/property/1119836783",
-    "last_seen": "2026-05-25T14:23:31.660124"
+    "last_seen": "2026-05-29T14:21:31.519155"
   },
   "d9443f4a064f": {
     "price": 250000,
@@ -203,5 +203,20 @@
     "price": 240000,
     "url": "https://www.spitogatos.gr/en/property/1118219885",
     "last_seen": "2026-05-25T14:26:57.825907"
+  },
+  "0737fb54ec2d": {
+    "price": 500000,
+    "url": "https://www.spitogatos.gr/en/property/1119765279",
+    "last_seen": "2026-05-29T14:25:13.977041"
+  },
+  "62db16d25c21": {
+    "price": 1450000,
+    "url": "https://www.spitogatos.gr/en/property/1117672218",
+    "last_seen": "2026-05-29T14:25:15.087205"
+  },
+  "9d87b336e320": {
+    "price": 270000,
+    "url": "https://www.spitogatos.gr/en/property/1119547603",
+    "last_seen": "2026-05-29T14:25:16.112820"
   }
 }

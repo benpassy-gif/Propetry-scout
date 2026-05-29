@@ -23,7 +23,7 @@
       "renovation_cost_per_sqm": 800,
       "target_mode": "flip",
       "created_at": "2026-05-12T00:00:00",
-      "last_run": "2026-05-28T22:20:59.198445"
+      "last_run": "2026-05-29T14:21:31.519357"
     },
     {
       "id": "rental-south",
@@ -47,7 +47,7 @@
       "renovation_cost_per_sqm": 600,
       "target_mode": "rent",
       "created_at": "2026-05-12T00:00:00",
-      "last_run": "2026-05-28T22:22:12.948182"
+      "last_run": "2026-05-29T14:22:33.396381"
     },
     {
       "id": "deep-discount",
@@ -105,7 +105,7 @@
       "target_mode": "building",
       "property_type": "building",
       "created_at": "2026-05-20T00:00:00",
-      "last_run": "2026-05-28T22:25:43.386991"
+      "last_run": "2026-05-29T14:25:17.147430"
     }
   ],
   "area_benchmarks": {
