@@ -2599,30 +2599,6 @@
   ],
   "runs": [
     {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 41,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-05-25T14:24:31.773111"
-    },
-    {
-      "profile_id": "deep-discount",
-      "profile_name": "Deep Discount Hunter",
-      "fetched": 101,
-      "new_alerts": 1,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-05-25T14:26:58.674599"
-    },
-    {
-      "profile_id": "nea-smyrni-cheap",
-      "profile_name": "Nea Smyrni Cheap",
-      "error": "'areas'",
-      "timestamp": "2026-05-25T14:26:58.674936"
-    },
-    {
       "profile_id": "flip-athens-cheap",
       "profile_name": "Flip Athens - Cheap",
       "fetched": 12,
@@ -3029,6 +3005,33 @@
       "price_changes": 0,
       "auctions": 0,
       "timestamp": "2026-06-01T18:48:31.337791"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 12,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-06-01T20:42:22.261588"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 8,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-06-01T20:43:36.640093"
+    },
+    {
+      "profile_id": "whole-building",
+      "profile_name": "Whole Building Hunter",
+      "fetched": 0,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-06-01T20:47:06.389855"
     }
   ]
 }
