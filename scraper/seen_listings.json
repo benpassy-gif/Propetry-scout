@@ -12,7 +12,7 @@
   "5c24c664bff2": {
     "price": 150000,
     "url": "https://www.spitogatos.gr/en/property/1119663040",
-    "last_seen": "2026-06-04T14:18:02.326180"
+    "last_seen": "2026-06-08T17:00:05.264594"
   },
   "d69d4ee92868": {
     "price": 350000,
@@ -32,7 +32,7 @@
   "b51217c5ef6a": {
     "price": 690000,
     "url": "https://www.spitogatos.gr/en/property/1119795442",
-    "last_seen": "2026-06-04T14:18:02.326357"
+    "last_seen": "2026-06-08T17:00:06.265011"
   },
   "f1aff56a5eee": {
     "price": 470000,
@@ -87,7 +87,7 @@
   "1cec6f7c9be6": {
     "price": 245000,
     "url": "https://www.spitogatos.gr/en/property/1119804515",
-    "last_seen": "2026-06-04T14:18:02.326140"
+    "last_seen": "2026-06-08T17:00:05.264504"
   },
   "c0edc83f3bd3": {
     "price": 380000,
@@ -212,7 +212,7 @@
   "62db16d25c21": {
     "price": 1450000,
     "url": "https://www.spitogatos.gr/en/property/1117672218",
-    "last_seen": "2026-06-07T20:46:16.611700"
+    "last_seen": "2026-06-08T17:02:51.985397"
   },
   "9d87b336e320": {
     "price": 270000,
@@ -242,7 +242,7 @@
   "7d1f1b1f91cd": {
     "price": 950000,
     "url": "https://www.spitogatos.gr/en/property/1118769113",
-    "last_seen": "2026-06-07T20:46:17.747571"
+    "last_seen": "2026-06-08T17:02:51.985445"
   },
   "9e50a94044fa": {
     "price": 600000,
@@ -252,7 +252,7 @@
   "704da2b09135": {
     "price": 350000,
     "url": "https://www.spitogatos.gr/en/property/1119064823",
-    "last_seen": "2026-06-04T14:20:36.922399"
+    "last_seen": "2026-06-08T17:02:51.985323"
   },
   "4f69c2cf8105": {
     "price": 995000,
@@ -298,5 +298,15 @@
     "price": 580000,
     "url": "https://www.spitogatos.gr/en/property/1112699539",
     "last_seen": "2026-06-07T20:46:16.611738"
+  },
+  "520dfbfd33a1": {
+    "price": 145000,
+    "url": "https://www.spitogatos.gr/en/property/1120004675",
+    "last_seen": "2026-06-08T17:00:05.264633"
+  },
+  "1b8260ca209e": {
+    "price": 350000,
+    "url": "https://www.spitogatos.gr/en/property/1116833845",
+    "last_seen": "2026-06-08T17:00:05.764801"
   }
 }
