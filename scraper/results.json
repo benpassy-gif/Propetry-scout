@@ -4377,36 +4377,31 @@
       "estimated_rent_yield": 0.05236421163649147,
       "total_cost": 2275600,
       "arv": 1986000
+    },
+    {
+      "id": "4d96c7efbb82",
+      "source": "spitogatos",
+      "title": "Apartment, 100m²",
+      "url": "https://www.spitogatos.gr/en/property/1119361538",
+      "price": 164000,
+      "sqm": 100.0,
+      "floor": 0,
+      "area": "nea-smyrni",
+      "price_per_sqm": 1640.0,
+      "is_auction": false,
+      "description": "Apartment, 100m²\nNea Smyrni (Athens - South)\n\nIn Nea Smyrni, in a very good location, an elevated ground floor apartment, measuring 100 sq m, is for sale. It consists of a spacious and bright living room, dining area, separate kitchen, two bedrooms with wooden floors and a recently renovated bathroo",
+      "scraped_at": "2026-06-11T08:48:28.628636",
+      "profile_id": "flip-athens-cheap",
+      "deal_score": 5,
+      "discount_vs_market": -0.4142857142857143,
+      "estimated_renovation": 80000,
+      "estimated_flip_roi": 0.08208378420157675,
+      "estimated_rent_yield": 0.05565002318750966,
+      "total_cost": 258760,
+      "arv": 280000
     }
   ],
   "runs": [
-    {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 8,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-06-02T18:28:18.404912"
-    },
-    {
-      "profile_id": "whole-building",
-      "profile_name": "Whole Building Hunter",
-      "fetched": 0,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-06-02T18:31:50.871665"
-    },
-    {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 12,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-06-02T23:11:13.666179"
-    },
     {
       "profile_id": "rental-south",
       "profile_name": "Rental - South Suburbs",
@@ -4829,6 +4824,33 @@
       "price_changes": 0,
       "auctions": 0,
       "timestamp": "2026-06-10T22:37:10.849490"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 66,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-06-11T08:49:53.723357"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 58,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-06-11T08:50:54.569313"
+    },
+    {
+      "profile_id": "whole-building",
+      "profile_name": "Whole Building Hunter",
+      "fetched": 0,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-06-11T08:53:48.575689"
     }
   ]
 }
