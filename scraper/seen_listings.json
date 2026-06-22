@@ -112,7 +112,7 @@
   "07aeffaf544a": {
     "price": 480000,
     "url": "https://www.spitogatos.gr/en/property/1118314655",
-    "last_seen": "2026-05-17T12:18:02.818373"
+    "last_seen": "2026-06-22T09:52:06.629777"
   },
   "70dfb77c4f14": {
     "price": 198000,
@@ -162,12 +162,12 @@
   "2debb8fdd447": {
     "price": 310000,
     "url": "https://www.spitogatos.gr/en/property/1119730401",
-    "last_seen": "2026-06-19T09:07:49.815953"
+    "last_seen": "2026-06-22T09:51:06.557977"
   },
   "d6757b7e87ec": {
     "price": 200000,
     "url": "https://www.spitogatos.gr/en/property/1115970603",
-    "last_seen": "2026-05-24T10:22:41.563833"
+    "last_seen": "2026-06-22T09:51:06.558095"
   },
   "8ce62173aaef": {
     "price": 680000,
@@ -207,12 +207,12 @@
   "0737fb54ec2d": {
     "price": 500000,
     "url": "https://www.spitogatos.gr/en/property/1119765279",
-    "last_seen": "2026-06-21T08:41:46.579218"
+    "last_seen": "2026-06-22T09:54:59.374451"
   },
   "62db16d25c21": {
     "price": 1450000,
     "url": "https://www.spitogatos.gr/en/property/1117672218",
-    "last_seen": "2026-06-21T08:41:46.579290"
+    "last_seen": "2026-06-22T09:54:59.374532"
   },
   "9d87b336e320": {
     "price": 270000,
@@ -332,7 +332,7 @@
   "58f8469b183a": {
     "price": 452000,
     "url": "https://www.spitogatos.gr/en/property/1120088585",
-    "last_seen": "2026-06-21T08:41:48.695266"
+    "last_seen": "2026-06-22T09:54:59.374597"
   },
   "a5b383f8908c": {
     "price": 187000,
@@ -367,11 +367,16 @@
   "9fe70024c182": {
     "price": 700000,
     "url": "https://www.spitogatos.gr/en/property/1119643384",
-    "last_seen": "2026-06-21T08:41:46.579337"
+    "last_seen": "2026-06-22T09:54:59.374569"
   },
   "1786c5fc2f49": {
     "price": 390000,
     "url": "https://www.spitogatos.gr/en/property/1119758126",
     "last_seen": "2026-06-21T08:41:47.614114"
+  },
+  "6b0f9574c568": {
+    "price": 430000,
+    "url": "https://www.spitogatos.gr/en/property/1120151507",
+    "last_seen": "2026-06-22T09:52:05.565308"
   }
 }
