@@ -535,6 +535,182 @@ def scrape_spitogatos_buildings(page, area, filters, profile_id, benchmarks, ren
     return listings
 
 
+# ── Additional scrapers (Plot, Tospitimou, Spiti24, Indomio, Landea, etc.) ────
+def scrape_generic_site(page, site_config, area, filters, profile_id, benchmarks, renov_cost):
+    """
+    Generic scraper for Greek real estate sites.
+    site_config = {
+        "name": "plot", "base_url": "...", "card_selector": "...",
+        "area_map": {...}, "price_regex": r"...", "sqm_regex": r"..."
+    }
+    """
+    listings = []
+    name = site_config["name"]
+    area_map = site_config.get("area_map", {})
+    area_slug = area_map.get(area)
+
+    if not area_slug and site_config.get("requires_area_map", False):
+        log.info("%s: no area mapping for %s, skipping", name, area)
+        return listings
+
+    try:
+        url = site_config["url_template"].format(
+            area=area_slug or area,
+            min_price=filters["min_price"],
+            max_price=filters["max_price"],
+            min_sqm=filters["min_sqm"],
+            max_sqm=filters["max_sqm"],
+        )
+    except KeyError as e:
+        log.warning("%s: missing URL template key %s", name, e)
+        return listings
+
+    log.info("%s: %s", name, url)
+    try:
+        page.goto(url, timeout=30000, wait_until="domcontentloaded")
+        try:
+            page.wait_for_selector(site_config["wait_selector"], timeout=12000)
+        except PlaywrightTimeout:
+            log.warning("%s %s: selector timeout", name, area)
+
+        time.sleep(3)
+
+        results = page.evaluate(f"""
+        () => {{
+          const cards = document.querySelectorAll('{site_config["card_selector"]}');
+          const seen = new Set(); const out = [];
+          cards.forEach(card => {{
+            const href = card.href || card.querySelector('a')?.href;
+            if (!href) return;
+            if (seen.has(href)) return; seen.add(href);
+            const container = card.closest('article, li, .listing, .property-card, div');
+            const text = container ? container.innerText : card.innerText;
+            if (text && text.length > 20) out.push({{ href, text }});
+          }});
+          return out;
+        }}
+        """)
+
+        log.info("%s %s: raw results: %d", name, area, len(results))
+        for item in results[:20]:
+            try:
+                href = item["href"]; text = item["text"]
+                price_m = re.search(site_config.get("price_regex", r"\u20ac\s*([\d.,]+)"), text)
+                price = parse_number(price_m.group(1)) if price_m else None
+                sqm_m = re.search(site_config.get("sqm_regex", r"(\d+)\s*(?:m[\u00b22]|sqm|\u03c4\.\u03bc)"), text, re.IGNORECASE)
+                sqm = float(sqm_m.group(1)) if sqm_m else None
+                title = text.split("\n")[0][:80] if text else "Property"
+                l = make_listing(name, href, title, price, sqm, None, area, text,
+                                 profile_id, filters, benchmarks, renov_cost)
+                if l: listings.append(l)
+            except Exception as e:
+                log.debug("%s card: %s", name, e)
+    except Exception as e:
+        log.warning("%s %s: %s", name, area, e)
+    log.info("%s %s: %d listings", name, area, len(listings))
+    return listings
+
+
+# Site configurations
+SITE_CONFIGS = {
+    "plot": {
+        "name": "plot",
+        "url_template": "https://www.plot.gr/en/real-estate-for-sale/apartment/{area}?min_price={min_price}&max_price={max_price}&min_area={min_sqm}&max_area={max_sqm}",
+        "card_selector": 'a[href*="/listing/"]',
+        "wait_selector": 'a[href*="/listing/"], .results-empty',
+        "area_map": {
+            "nea-smyrni": "nea-smyrni", "kallithea": "kallithea",
+            "palaio-faliro": "palaio-faliro", "glyfada": "glyfada",
+            "ilioupoli": "ilioupoli", "byronas": "byronas",
+            "athens-center": "athina", "kolonaki": "kolonaki",
+            "neos-kosmos": "neos-kosmos", "moschato": "moschato",
+            "tavros": "tavros", "piraeus": "peiraias",
+            "alimos": "alimos", "dafni": "dafni",
+            "agios-dimitrios": "agios-dimitrios",
+        },
+        "requires_area_map": True,
+    },
+    "tospitimou": {
+        "name": "tospitimou",
+        "url_template": "https://en.tospitimou.gr/property-for-sale/{area}?priceMin={min_price}&priceMax={max_price}&areaMin={min_sqm}&areaMax={max_sqm}",
+        "card_selector": 'a[href*="/listing/"], a[href*="/property/"]',
+        "wait_selector": 'a[href*="/listing/"], a[href*="/property/"], .no-results',
+        "area_map": {
+            "nea-smyrni": "nea-smyrni", "kallithea": "kallithea",
+            "palaio-faliro": "palaio-faliro", "glyfada": "glyfada",
+            "ilioupoli": "ilioupoli", "athens-center": "athina-kentro",
+        },
+        "requires_area_map": True,
+    },
+    "spiti24": {
+        "name": "spiti24",
+        "url_template": "https://www.spiti24.gr/en/sale/apartments/{area}?priceFrom={min_price}&priceTo={max_price}&areaFrom={min_sqm}&areaTo={max_sqm}",
+        "card_selector": 'a[href*="/property/"]',
+        "wait_selector": 'a[href*="/property/"], .no-results',
+        "area_map": {
+            "nea-smyrni": "nea-smyrni", "kallithea": "kallithea",
+            "palaio-faliro": "palaio-faliro", "glyfada": "glyfada",
+            "ilioupoli": "ilioupoli",
+        },
+        "requires_area_map": True,
+    },
+    "indomio": {
+        "name": "indomio",
+        "url_template": "https://en.indomio.gr/sale-residential/{area}/?priceMin={min_price}&priceMax={max_price}&areaMin={min_sqm}&areaMax={max_sqm}",
+        "card_selector": 'a[href*="/property/"], a[href*="/agency-property/"]',
+        "wait_selector": 'a[href*="/property/"], .no-results-msg',
+        "area_map": {
+            "nea-smyrni": "nea-smyrni-athens",
+            "kallithea": "kallithea-athens",
+            "palaio-faliro": "palaio-faliro-athens",
+            "glyfada": "glyfada-athens",
+            "ilioupoli": "ilioupoli-athens",
+        },
+        "requires_area_map": True,
+    },
+    "landea": {
+        "name": "landea",  # AUCTIONS
+        "url_template": "https://www.landea.gr/en/properties/?type=apartment&priceMin={min_price}&priceMax={max_price}",
+        "card_selector": 'a[href*="/property/"], a[href*="/auction/"]',
+        "wait_selector": 'a[href*="/property/"], a[href*="/auction/"], .empty',
+        "area_map": {},
+        "requires_area_map": False,
+    },
+    "ktimatoemporiki": {
+        "name": "ktimatoemporiki",
+        "url_template": "https://ktimatoemporiki.gr/en/properties-search?type=apartment&location={area}&priceFrom={min_price}&priceTo={max_price}",
+        "card_selector": 'a[href*="/property/"]',
+        "wait_selector": 'a[href*="/property/"], .no-results',
+        "area_map": {
+            "athens-center": "athens",
+            "kolonaki": "kolonaki",
+            "glyfada": "glyfada",
+        },
+        "requires_area_map": True,
+    },
+    "strategymentor": {
+        "name": "strategymentor",
+        "url_template": "https://www.strategymentor.gr/en/search/?category=apartment&area={area}&priceMin={min_price}&priceMax={max_price}",
+        "card_selector": 'a[href*="/properties/"], a[href*="/property/"]',
+        "wait_selector": 'a[href*="/properties/"], a[href*="/property/"], .no-results',
+        "area_map": {},
+        "requires_area_map": False,  # Searches all areas
+    },
+    "goldenhome": {
+        "name": "goldenhome",
+        "url_template": "https://goldenhome.gr/en/property/search?type=apartment&area={area}&priceMin={min_price}&priceMax={max_price}&areaMin={min_sqm}&areaMax={max_sqm}",
+        "card_selector": 'a[href*="/property/view/"]',
+        "wait_selector": 'a[href*="/property/view/"], .no-results',
+        "area_map": {
+            "nea-smyrni": "nea-smyrni", "kallithea": "kallithea",
+            "palaio-faliro": "palaio-faliro", "glyfada": "glyfada",
+            "ilioupoli": "ilioupoli",
+        },
+        "requires_area_map": True,
+    },
+}
+
+
 # ── Profile runner ─────────────────────────────────────────────────────────────
 def run_profile(profile, benchmarks, seen, results, page):
     name = profile["name"]; pid = profile["id"]
@@ -549,14 +725,25 @@ def run_profile(profile, benchmarks, seen, results, page):
         # For building profiles, use building-specific scrapers
         if is_building:
             all_listings.extend(scrape_spitogatos_buildings(page, area, filters, pid, benchmarks, renov))
+            time.sleep(1)
         else:
             all_listings.extend(scrape_spitogatos(page, area, filters, pid, benchmarks, renov))
-        time.sleep(1)
+            time.sleep(1)
+
         all_listings.extend(scrape_xe(page, area, filters, pid, benchmarks, renov))
         time.sleep(1)
+
         if not is_building:
             all_listings.extend(scrape_rightmove(page, area, filters, pid, benchmarks, renov))
             time.sleep(1)
+
+        # New sites - scrape via generic scraper
+        for site_key, site_config in SITE_CONFIGS.items():
+            try:
+                all_listings.extend(scrape_generic_site(page, site_config, area, filters, pid, benchmarks, renov))
+                time.sleep(1)
+            except Exception as e:
+                log.warning("Generic scraper %s failed for %s: %s", site_key, area, e)
 
     log.info("Total fetched: %d", len(all_listings))
 
