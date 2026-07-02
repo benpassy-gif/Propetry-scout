@@ -6493,15 +6493,6 @@
   ],
   "runs": [
     {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 40,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-06-21T08:38:54.043808"
-    },
-    {
       "profile_id": "whole-building",
       "profile_name": "Whole Building Hunter",
       "fetched": 6,
@@ -6941,6 +6932,15 @@
       "price_changes": 0,
       "auctions": 0,
       "timestamp": "2026-06-30T08:00:55.011003"
+    },
+    {
+      "profile_id": "whole-building",
+      "profile_name": "Whole Building Hunter",
+      "fetched": 20,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-07-02T06:37:29.274821"
     }
   ]
 }
