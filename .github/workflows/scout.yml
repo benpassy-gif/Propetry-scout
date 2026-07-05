@@ -47,7 +47,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           PROFILE_ID: ${{ github.event.inputs.profile_id }}
         run: python scraper/scout.py
-        timeout-minutes: 15
+        timeout-minutes: 20
 
       - name: Commit results back to repo
         if: always()
