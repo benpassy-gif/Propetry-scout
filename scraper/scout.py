@@ -238,20 +238,13 @@ def parse_spitogatos_floor(text: str) -> Optional[int]:
 def scrape_spitogatos(page, area, filters, profile_id, benchmarks, renov_cost):
     listings = []
 
-    # Build URL with price + size filters
-    # Floor filter: send all floor codes from min_floor to max_floor
-    min_floor = filters.get("min_floor", -2)
-    max_floor = filters.get("max_floor", 10)
-    floor_params = ""
-    for numeric, code in SPITOGATOS_FLOOR_CODES.items():
-        if min_floor <= numeric <= max_floor:
-            floor_params += f"&floor[]={code}"
-
+    # NOTE: Do NOT add floor[] URL params - the codes are not documented
+    # and break the search (returns 0 results). Floor filtering is done
+    # in run_profile after parsing each listing's floor from its text.
     url = (
         "https://www.spitogatos.gr/en/for_sale-homes/" + area
         + "?price[]=" + str(filters["min_price"]) + "%2C" + str(filters["max_price"])
         + "&areas[]=" + str(filters["min_sqm"]) + "%2C" + str(filters["max_sqm"])
-        + floor_params
     )
     log.info("Spitogatos: %s", url)
     try:
@@ -299,53 +292,58 @@ def scrape_xe(page, area, filters, profile_id, benchmarks, renov_cost):
     listings = []
     # XE.gr new URL format (2025): /en/property/r/apartment-for-sale/<place-id>_<slug>
     # Place IDs taken from XE.gr search results
-    xe_place_map = {
-        "nea-smyrni":    "ChIJM3OFEly9oRQRVBiTBzlCMDc_nea-smyrni",
-        "kallithea":     "ChIJw7AEqla9oRQRgZbMHahZSFs_kallithea",
-        "palaio-faliro": "ChIJiaiuGqC9oRQRdmMfD8cMLSY_palaio-faliro",
-        "glyfada":       "ChIJpxbHN_e9oRQRCkX_yFWHKwQ_glyfada",
-        "ilioupoli":     "ChIJpT7gJbK9oRQRvZfAEOOlJww_ilioupoli",
-        "byronas":       "ChIJ8RzNYL29oRQRtf_EEMaYNkI_vyronas",
-        "athens-center": "ChIJ8UNwBh-9oRQR3Y1mdkU1Nic_athens",
-        "neos-kosmos":   "ChIJcybCQLO9oRQR3F_YGRa3SJk_neos-kosmos",
+    # XE search URL using Greek area names as free-text search.
+    # This avoids needing internal place IDs (which we cannot guess).
+    xe_search_names = {
+        "nea-smyrni":    "Nea Smyrni",
+        "kallithea":     "Kallithea",
+        "palaio-faliro": "Palaio Faliro",
+        "glyfada":       "Glyfada",
+        "ilioupoli":     "Ilioupoli",
+        "byronas":       "Vyronas",
+        "athens-center": "Athens Center",
+        "neos-kosmos":   "Neos Kosmos",
+        "moschato":      "Moschato",
+        "tavros":        "Tavros",
     }
-    place_id = xe_place_map.get(area)
-    if not place_id:
-        log.warning("XE: no place ID for area %s", area)
+    search_name = xe_search_names.get(area)
+    if not search_name:
+        log.info("XE: no search name for area %s, skipping", area)
         return listings
 
-    # New URL format with price/size filters as query params
+    # XE free-text search URL - works without place IDs
+    from urllib.parse import quote
     url = (
-        f"https://www.xe.gr/en/property/r/apartment-for-sale/{place_id}"
-        f"?minimum_price={filters['min_price']}"
+        f"https://www.xe.gr/en/property/search?"
+        f"transaction_name=buy&item_type=re_residence"
+        f"&text_search={quote(search_name)}"
+        f"&minimum_price={filters['min_price']}"
         f"&maximum_price={filters['max_price']}"
-        f"&minimum_level_size={filters['min_sqm']}"
-        f"&maximum_level_size={filters['max_sqm']}"
+        f"&minimum_size={filters['min_sqm']}"
+        f"&maximum_size={filters['max_sqm']}"
     )
     log.info("XE: %s", url)
     try:
-        page.goto(url, timeout=30000, wait_until="domcontentloaded")
+        page.goto(url, timeout=15000, wait_until="domcontentloaded")
         try:
-            # XE uses React — wait for listing cards to appear
             page.wait_for_selector(
-                'a[href*="/en/property/d/"], [data-testid="property-ad-item"], .property-ad',
-                timeout=12000
+                'a[href*="/property/d/"], a[href*="/en/property/d/"], [data-testid*="property"], [class*="property"]',
+                timeout=8000
             )
         except PlaywrightTimeout:
-            log.warning("XE %s: listings selector timeout", area)
+            log.info("XE %s: no results (selector timeout)", area)
+            return listings
 
-        time.sleep(3)
+        time.sleep(2)
 
         results = page.evaluate("""
         () => {
-          // XE new format: listing links contain /en/property/d/
-          const cards = document.querySelectorAll('a[href*="/en/property/d/"]');
+          const cards = document.querySelectorAll('a[href*="/property/d/"]');
           const seen = new Set(); const out = [];
           cards.forEach(card => {
             const href = card.href;
             if (seen.has(href)) return; seen.add(href);
-            // Walk up to find the listing card container
-            let container = card.closest('[data-testid="property-ad-item"]')
+            let container = card.closest('[data-testid*="property"]')
                          || card.closest('article')
                          || card.closest('li')
                          || card.parentElement;
@@ -539,10 +537,7 @@ def scrape_spitogatos_buildings(page, area, filters, profile_id, benchmarks, ren
 def scrape_generic_site(page, site_config, area, filters, profile_id, benchmarks, renov_cost):
     """
     Generic scraper for Greek real estate sites.
-    site_config = {
-        "name": "plot", "base_url": "...", "card_selector": "...",
-        "area_map": {...}, "price_regex": r"...", "sqm_regex": r"..."
-    }
+    Short timeouts - if a site doesn't respond fast, skip it.
     """
     listings = []
     name = site_config["name"]
@@ -567,13 +562,14 @@ def scrape_generic_site(page, site_config, area, filters, profile_id, benchmarks
 
     log.info("%s: %s", name, url)
     try:
-        page.goto(url, timeout=30000, wait_until="domcontentloaded")
+        page.goto(url, timeout=15000, wait_until="domcontentloaded")
         try:
-            page.wait_for_selector(site_config["wait_selector"], timeout=12000)
+            page.wait_for_selector(site_config["wait_selector"], timeout=5000)
         except PlaywrightTimeout:
-            log.warning("%s %s: selector timeout", name, area)
+            log.info("%s %s: no results found (selector timeout)", name, area)
+            return listings
 
-        time.sleep(3)
+        time.sleep(1)
 
         results = page.evaluate(f"""
         () => {{
@@ -606,104 +602,50 @@ def scrape_generic_site(page, site_config, area, filters, profile_id, benchmarks
             except Exception as e:
                 log.debug("%s card: %s", name, e)
     except Exception as e:
-        log.warning("%s %s: %s", name, area, e)
+        log.warning("%s %s: %s", name, area, str(e)[:100])
     log.info("%s %s: %d listings", name, area, len(listings))
     return listings
 
 
-# Site configurations
+# Site configurations - only sites that actually work
 SITE_CONFIGS = {
     "plot": {
         "name": "plot",
         "url_template": "https://www.plot.gr/en/real-estate-for-sale/apartment/{area}?min_price={min_price}&max_price={max_price}&min_area={min_sqm}&max_area={max_sqm}",
         "card_selector": 'a[href*="/listing/"]',
-        "wait_selector": 'a[href*="/listing/"], .results-empty',
+        "wait_selector": 'a[href*="/listing/"]',
         "area_map": {
             "nea-smyrni": "nea-smyrni", "kallithea": "kallithea",
             "palaio-faliro": "palaio-faliro", "glyfada": "glyfada",
             "ilioupoli": "ilioupoli", "byronas": "byronas",
             "athens-center": "athina", "kolonaki": "kolonaki",
             "neos-kosmos": "neos-kosmos", "moschato": "moschato",
-            "tavros": "tavros", "piraeus": "peiraias",
-            "alimos": "alimos", "dafni": "dafni",
-            "agios-dimitrios": "agios-dimitrios",
-        },
-        "requires_area_map": True,
-    },
-    "tospitimou": {
-        "name": "tospitimou",
-        "url_template": "https://en.tospitimou.gr/property-for-sale/{area}?priceMin={min_price}&priceMax={max_price}&areaMin={min_sqm}&areaMax={max_sqm}",
-        "card_selector": 'a[href*="/listing/"], a[href*="/property/"]',
-        "wait_selector": 'a[href*="/listing/"], a[href*="/property/"], .no-results',
-        "area_map": {
-            "nea-smyrni": "nea-smyrni", "kallithea": "kallithea",
-            "palaio-faliro": "palaio-faliro", "glyfada": "glyfada",
-            "ilioupoli": "ilioupoli", "athens-center": "athina-kentro",
-        },
-        "requires_area_map": True,
-    },
-    "spiti24": {
-        "name": "spiti24",
-        "url_template": "https://www.spiti24.gr/en/sale/apartments/{area}?priceFrom={min_price}&priceTo={max_price}&areaFrom={min_sqm}&areaTo={max_sqm}",
-        "card_selector": 'a[href*="/property/"]',
-        "wait_selector": 'a[href*="/property/"], .no-results',
-        "area_map": {
-            "nea-smyrni": "nea-smyrni", "kallithea": "kallithea",
-            "palaio-faliro": "palaio-faliro", "glyfada": "glyfada",
-            "ilioupoli": "ilioupoli",
         },
         "requires_area_map": True,
     },
     "indomio": {
         "name": "indomio",
-        "url_template": "https://en.indomio.gr/sale-residential/{area}/?priceMin={min_price}&priceMax={max_price}&areaMin={min_sqm}&areaMax={max_sqm}",
-        "card_selector": 'a[href*="/property/"], a[href*="/agency-property/"]',
-        "wait_selector": 'a[href*="/property/"], .no-results-msg',
+        "url_template": "https://www.indomio.gr/en/pwlhsh-diamerismata/{area}/?prezzoMinimo={min_price}&prezzoMassimo={max_price}",
+        "card_selector": 'a[href*="/aggelies/"]',
+        "wait_selector": 'a[href*="/aggelies/"]',
         "area_map": {
-            "nea-smyrni": "nea-smyrni-athens",
-            "kallithea": "kallithea-athens",
-            "palaio-faliro": "palaio-faliro-athens",
-            "glyfada": "glyfada-athens",
-            "ilioupoli": "ilioupoli-athens",
+            "nea-smyrni": "nea-smyrni",
+            "kallithea": "kallithea",
+            "palaio-faliro": "palaio-faliro",
+            "glyfada": "glyfada",
+            "ilioupoli": "ilioupoli",
         },
         "requires_area_map": True,
-    },
-    "landea": {
-        "name": "landea",  # AUCTIONS
-        "url_template": "https://www.landea.gr/en/properties/?type=apartment&priceMin={min_price}&priceMax={max_price}",
-        "card_selector": 'a[href*="/property/"], a[href*="/auction/"]',
-        "wait_selector": 'a[href*="/property/"], a[href*="/auction/"], .empty',
-        "area_map": {},
-        "requires_area_map": False,
     },
     "ktimatoemporiki": {
         "name": "ktimatoemporiki",
         "url_template": "https://ktimatoemporiki.gr/en/properties-search?type=apartment&location={area}&priceFrom={min_price}&priceTo={max_price}",
         "card_selector": 'a[href*="/property/"]',
-        "wait_selector": 'a[href*="/property/"], .no-results',
+        "wait_selector": 'a[href*="/property/"]',
         "area_map": {
-            "athens-center": "athens",
-            "kolonaki": "kolonaki",
-            "glyfada": "glyfada",
-        },
-        "requires_area_map": True,
-    },
-    "strategymentor": {
-        "name": "strategymentor",
-        "url_template": "https://www.strategymentor.gr/en/search/?category=apartment&area={area}&priceMin={min_price}&priceMax={max_price}",
-        "card_selector": 'a[href*="/properties/"], a[href*="/property/"]',
-        "wait_selector": 'a[href*="/properties/"], a[href*="/property/"], .no-results',
-        "area_map": {},
-        "requires_area_map": False,  # Searches all areas
-    },
-    "goldenhome": {
-        "name": "goldenhome",
-        "url_template": "https://goldenhome.gr/en/property/search?type=apartment&area={area}&priceMin={min_price}&priceMax={max_price}&areaMin={min_sqm}&areaMax={max_sqm}",
-        "card_selector": 'a[href*="/property/view/"]',
-        "wait_selector": 'a[href*="/property/view/"], .no-results',
-        "area_map": {
-            "nea-smyrni": "nea-smyrni", "kallithea": "kallithea",
-            "palaio-faliro": "palaio-faliro", "glyfada": "glyfada",
+            "athens-center": "athens", "kolonaki": "kolonaki",
+            "glyfada": "glyfada", "nea-smyrni": "nea-smyrni",
+            "kallithea": "kallithea", "palaio-faliro": "palaio-faliro",
             "ilioupoli": "ilioupoli",
         },
         "requires_area_map": True,
