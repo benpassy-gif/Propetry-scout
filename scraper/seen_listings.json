@@ -2,7 +2,7 @@
   "4d96c7efbb82": {
     "price": 164000,
     "url": "https://www.spitogatos.gr/en/property/1119361538",
-    "last_seen": "2026-07-05T16:53:58.004709"
+    "last_seen": "2026-07-08T06:31:16.336215"
   },
   "fb7c980addec": {
     "price": 55000,
@@ -207,12 +207,12 @@
   "0737fb54ec2d": {
     "price": 500000,
     "url": "https://www.spitogatos.gr/en/property/1119765279",
-    "last_seen": "2026-07-05T16:58:03.279643"
+    "last_seen": "2026-07-08T06:35:05.833661"
   },
   "62db16d25c21": {
     "price": 1450000,
     "url": "https://www.spitogatos.gr/en/property/1117672218",
-    "last_seen": "2026-07-05T16:58:03.279696"
+    "last_seen": "2026-07-08T06:35:05.833782"
   },
   "9d87b336e320": {
     "price": 270000,
@@ -242,7 +242,7 @@
   "7d1f1b1f91cd": {
     "price": 950000,
     "url": "https://www.spitogatos.gr/en/property/1118769113",
-    "last_seen": "2026-07-05T16:58:03.279827"
+    "last_seen": "2026-07-08T06:35:05.833837"
   },
   "9e50a94044fa": {
     "price": 600000,
@@ -262,7 +262,7 @@
   "d5a040fc3f63": {
     "price": 420000,
     "url": "https://www.spitogatos.gr/en/property/1119991748",
-    "last_seen": "2026-06-14T17:11:49.450057"
+    "last_seen": "2026-07-08T06:35:05.833749"
   },
   "0efced87ee77": {
     "price": 250000,
@@ -360,9 +360,9 @@
     "last_seen": "2026-06-21T08:38:53.043434"
   },
   "0b6e4f7624b1": {
-    "price": 169000,
+    "price": 165000,
     "url": "https://www.spitogatos.gr/en/property/1119926305",
-    "last_seen": "2026-06-30T07:58:15.387604"
+    "last_seen": "2026-07-08T06:32:21.318639"
   },
   "9fe70024c182": {
     "price": 700000,
@@ -377,7 +377,7 @@
   "6b0f9574c568": {
     "price": 430000,
     "url": "https://www.spitogatos.gr/en/property/1120151507",
-    "last_seen": "2026-06-25T07:50:03.601709"
+    "last_seen": "2026-07-08T06:32:20.818305"
   },
   "1bf11d5af676": {
     "price": 135000,
@@ -387,7 +387,7 @@
   "bca3a6c10991": {
     "price": 230000,
     "url": "https://www.spitogatos.gr/en/property/1120072334",
-    "last_seen": "2026-06-30T07:58:15.387526"
+    "last_seen": "2026-07-08T06:32:21.318559"
   },
   "4a51b60cd336": {
     "price": 280000,
@@ -417,6 +417,16 @@
   "5e4008a0a132": {
     "price": 850000,
     "url": "https://www.spitogatos.gr/en/property/1120134993",
-    "last_seen": "2026-07-05T16:58:03.279595"
+    "last_seen": "2026-07-08T06:35:04.858025"
+  },
+  "c0e786eb8bd1": {
+    "price": 160000,
+    "url": "https://www.spitogatos.gr/en/property/1120274612",
+    "last_seen": "2026-07-08T06:32:20.818397"
+  },
+  "7329ae807d38": {
+    "price": 800000,
+    "url": "https://www.spitogatos.gr/en/property/1120178927",
+    "last_seen": "2026-07-08T06:35:04.858115"
   }
 }
