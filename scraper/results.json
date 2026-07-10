@@ -7457,36 +7457,75 @@
       "estimated_rent_yield": 0.05705817924102828,
       "total_cost": 1552100,
       "arv": 1476000
+    },
+    {
+      "id": "4d96c7efbb82",
+      "source": "spitogatos",
+      "title": "Apartment, 100m²",
+      "url": "https://www.spitogatos.gr/en/property/1119361538",
+      "price": 164000,
+      "sqm": 100.0,
+      "floor": 0,
+      "area": "nea-smyrni",
+      "price_per_sqm": 1640.0,
+      "is_auction": false,
+      "description": "Apartment, 100m²\nNea Smyrni (Athens - South)\n\nIn Nea Smyrni, in a very good location, an elevated ground floor apartment, measuring 100 sq m, is for sale. It consists of a spacious and bright living room, dining area, separate kitchen, two bedrooms with wooden floors and a recently renovated bathroo",
+      "scraped_at": "2026-07-10T17:39:28.251429",
+      "profile_id": "flip-athens-cheap",
+      "deal_score": 5,
+      "discount_vs_market": -0.4142857142857143,
+      "estimated_renovation": 80000,
+      "estimated_flip_roi": 0.08208378420157675,
+      "estimated_rent_yield": 0.05565002318750966,
+      "total_cost": 258760,
+      "arv": 280000
+    },
+    {
+      "id": "8e478e371a84",
+      "source": "spitogatos",
+      "title": "Building, 538m²",
+      "url": "https://www.spitogatos.gr/en/property/1116260974",
+      "price": 680000,
+      "sqm": 538.0,
+      "floor": 0,
+      "area": "ilioupoli",
+      "price_per_sqm": 1263.9405204460966,
+      "is_auction": false,
+      "description": "Building, 538m²\nAno Ilioupoli (Ilioupoli)\n3\nrd\n\nUpdated: 10/07/2026\n\n€680,000",
+      "scraped_at": "2026-07-10T17:40:36.667418",
+      "profile_id": "flip-athens-cheap",
+      "deal_score": 4,
+      "discount_vs_market": -0.2978108219743908,
+      "estimated_renovation": 430400,
+      "estimated_flip_roi": -0.17343803345851827,
+      "estimated_rent_yield": 0.046838511437350634,
+      "total_cost": 1171600,
+      "arv": 968400
+    },
+    {
+      "id": "3f49b2b38edc",
+      "source": "spitogatos",
+      "title": "Detached house, 210m²",
+      "url": "https://www.spitogatos.gr/en/property/1120252785",
+      "price": 310000,
+      "sqm": 210.0,
+      "floor": 0,
+      "area": "ilioupoli",
+      "price_per_sqm": 1476.1904761904761,
+      "is_auction": false,
+      "description": "Detached house, 210m²\nAno Ilioupoli (Ilioupoli)\n\nProperty Code: 3-828 - House FOR SALE in Ilioupoli Ano Ilioupoli for € 310.000 . This 210.00 sq. m. House consists of 2 levels and features 2 Bedrooms, Livingroom, Kitchen, bathroom and a WC. The property also boasts Heating system: Autonomous heating",
+      "scraped_at": "2026-07-10T17:40:36.667511",
+      "profile_id": "flip-athens-cheap",
+      "deal_score": 4,
+      "discount_vs_market": -0.1798941798941799,
+      "estimated_renovation": 168000,
+      "estimated_flip_roi": -0.25281676220596955,
+      "estimated_rent_yield": 0.04234038347499506,
+      "total_cost": 505900,
+      "arv": 378000
     }
   ],
   "runs": [
-    {
-      "profile_id": "whole-building",
-      "profile_name": "Whole Building Hunter",
-      "fetched": 0,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-06-28T07:59:30.738524"
-    },
-    {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 45,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-06-28T16:57:35.974020"
-    },
-    {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 20,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-06-28T16:58:34.965366"
-    },
     {
       "profile_id": "whole-building",
       "profile_name": "Whole Building Hunter",
@@ -7909,6 +7948,33 @@
       "price_changes": 0,
       "auctions": 0,
       "timestamp": "2026-07-10T07:45:23.588881"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 96,
+      "new_alerts": 1,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-07-10T17:41:06.209749"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 98,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-07-10T17:42:11.292363"
+    },
+    {
+      "profile_id": "whole-building",
+      "profile_name": "Whole Building Hunter",
+      "fetched": 72,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-07-10T17:45:27.326467"
     }
   ]
 }
