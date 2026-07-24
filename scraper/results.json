@@ -8039,33 +8039,6 @@
       "new_alerts": 0,
       "price_changes": 0,
       "auctions": 0,
-      "timestamp": "2026-07-15T06:20:00.638916"
-    },
-    {
-      "profile_id": "whole-building",
-      "profile_name": "Whole Building Hunter",
-      "fetched": 72,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-07-15T06:24:01.462779"
-    },
-    {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 64,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-07-15T17:04:32.938034"
-    },
-    {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 48,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
       "timestamp": "2026-07-15T17:05:51.029349"
     },
     {
@@ -8481,6 +8454,33 @@
       "price_changes": 0,
       "auctions": 0,
       "timestamp": "2026-07-24T06:35:15.402991"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 64,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-07-24T17:20:49.987493"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 40,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-07-24T17:22:14.016708"
+    },
+    {
+      "profile_id": "whole-building",
+      "profile_name": "Whole Building Hunter",
+      "fetched": 72,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-07-24T17:26:12.825500"
     }
   ]
 }
