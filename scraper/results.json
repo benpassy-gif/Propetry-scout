@@ -8033,15 +8033,6 @@
   ],
   "runs": [
     {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 40,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-07-23T06:34:39.094147"
-    },
-    {
       "profile_id": "whole-building",
       "profile_name": "Whole Building Hunter",
       "fetched": 80,
@@ -8481,6 +8472,15 @@
       "price_changes": 0,
       "auctions": 0,
       "timestamp": "2026-08-02T06:41:23.200963"
+    },
+    {
+      "profile_id": "deep-discount",
+      "profile_name": "Deep Discount Hunter",
+      "fetched": 104,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-08-02T16:06:10.888838"
     }
   ]
 }
