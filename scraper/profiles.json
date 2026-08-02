@@ -106,6 +106,26 @@
       "property_type": "building",
       "created_at": "2026-05-20T00:00:00",
       "last_run": "2026-08-02T06:41:23.200980"
+    },
+    {
+      "id": "cheap",
+      "name": "Cheap",
+      "description": "",
+      "active": true,
+      "filters": {
+        "min_sqm": 45,
+        "max_sqm": 1000,
+        "min_price": 60000,
+        "max_price": 500000,
+        "min_floor": -1,
+        "max_floor": 10,
+        "max_price_per_sqm": 1100,
+        "min_deal_score": 4
+      },
+      "renovation_cost_per_sqm": 1000,
+      "target_mode": "flip",
+      "created_at": "2026-08-02T16:02:02.565Z",
+      "last_run": null
     }
   ],
   "area_benchmarks": {
