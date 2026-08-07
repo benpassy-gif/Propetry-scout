@@ -8033,42 +8033,6 @@
   ],
   "runs": [
     {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 64,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-07-31T06:47:35.222819"
-    },
-    {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 32,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-07-31T06:48:54.251063"
-    },
-    {
-      "profile_id": "whole-building",
-      "profile_name": "Whole Building Hunter",
-      "fetched": 64,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-07-31T06:52:53.531027"
-    },
-    {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 64,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-07-31T17:17:54.363238"
-    },
-    {
       "profile_id": "rental-south",
       "profile_name": "Rental - South Suburbs",
       "fetched": 32,
@@ -8451,6 +8415,39 @@
       "profile_name": "Cheap",
       "error": "'areas'",
       "timestamp": "2026-08-07T05:50:27.164506"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 56,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-08-07T16:41:46.535188"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 48,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-08-07T16:43:07.788721"
+    },
+    {
+      "profile_id": "whole-building",
+      "profile_name": "Whole Building Hunter",
+      "fetched": 80,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-08-07T16:47:07.243484"
+    },
+    {
+      "profile_id": "cheap",
+      "profile_name": "Cheap",
+      "error": "'areas'",
+      "timestamp": "2026-08-07T16:47:07.243624"
     }
   ]
 }
