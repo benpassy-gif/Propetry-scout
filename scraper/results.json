@@ -8033,15 +8033,6 @@
   ],
   "runs": [
     {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 64,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-08-19T16:19:13.861735"
-    },
-    {
       "profile_id": "rental-south",
       "profile_name": "Rental - South Suburbs",
       "fetched": 48,
@@ -8451,6 +8442,15 @@
       "profile_name": "Cheap",
       "error": "'areas'",
       "timestamp": "2026-08-25T04:50:58.005840"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 56,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-08-25T12:20:26.781014"
     }
   ]
 }
