@@ -1,5 +1,5 @@
 """
-Property Scout Greece - v4.2
+Property Scout Greece - v4.3
 - Emoji formatting matching original style
 - Deduplication with price tracking (seen_listings.json)
 - All listings with score >= 4 sent (no cap)
@@ -175,6 +175,50 @@ def parse_number(text):
         return None
 
 
+# ── Robust price / sqm extraction (works for all Greek sites) ─────────────────
+# Greek sites write prices as "310.000 EUR", "EUR 310,000", "310000EUR" etc.
+# The currency symbol can appear BEFORE or AFTER the number, so match both.
+_PRICE_PATTERNS = [
+    r"(?:\u20ac|EUR)\s*([\d][\d.,\s]{2,})",     # EUR 310.000
+    r"([\d][\d.,\s]{2,})\s*(?:\u20ac|EUR)",     # 310.000 EUR
+]
+_SQM_PATTERNS = [
+    r"(\d+(?:[.,]\d+)?)\s*(?:m\u00b2|m2|\u03c4\.?\u03bc\.?|sq\.?\s?m|sqm)",
+    r"(?:\u03b5\u03bc\u03b2\u03b1\u03b4\u03cc\u03bd|size|area)\D{0,10}(\d+(?:[.,]\d+)?)",
+]
+
+
+def extract_price(text):
+    """Find the most plausible property price in a listing card's text."""
+    candidates = []
+    for pat in _PRICE_PATTERNS:
+        for m in re.finditer(pat, text, re.IGNORECASE):
+            v = parse_number(m.group(1))
+            if v and 5000 <= v <= 20000000:
+                candidates.append(v)
+    if not candidates:
+        return None
+    # The headline price is normally the largest number on the card
+    return max(candidates)
+
+
+def extract_sqm(text):
+    """Find the most plausible size in sqm in a listing card's text."""
+    candidates = []
+    for pat in _SQM_PATTERNS:
+        for m in re.finditer(pat, text, re.IGNORECASE):
+            raw = m.group(1).replace(",", ".")
+            try:
+                v = float(raw)
+            except ValueError:
+                continue
+            if 10 <= v <= 5000:
+                candidates.append(v)
+    if not candidates:
+        return None
+    return max(candidates)
+
+
 def make_listing(source, href, title, price, sqm, floor, area, desc, profile_id, filters, benchmarks, renov_cost):
     listing_id = hashlib.md5((href + profile_id).encode()).hexdigest()[:12]
     full_text = (title + " " + desc).lower()
@@ -271,10 +315,8 @@ def scrape_spitogatos(page, area, filters, profile_id, benchmarks, renov_cost):
         for item in results[:25]:
             try:
                 href = item["href"]; text = item["text"]
-                price_m = re.search(r"\u20ac\s*([\d.,]+)", text)
-                price = parse_number(price_m.group(1)) if price_m else None
-                sqm_m = re.search(r"(\d+)\s*m[\u00b22]", text)
-                sqm = float(sqm_m.group(1)) if sqm_m else None
+                price = extract_price(text)
+                sqm = extract_sqm(text)
                 floor_m = re.search(r"(\d+)(?:st|nd|rd|th)\s*floor", text, re.IGNORECASE)
                 floor = int(floor_m.group(1)) if floor_m else parse_spitogatos_floor(text)
                 title = text.split("\n")[0][:80] if text else "Apartment"
@@ -359,11 +401,8 @@ def scrape_xe(page, area, filters, profile_id, benchmarks, renov_cost):
             try:
                 href = item["href"]; text = item["text"]
                 # Price: look for € followed by number
-                price_m = re.search(r"\u20ac\s*([\d.,]+)", text)
-                price = parse_number(price_m.group(1)) if price_m else None
-                # Size: number followed by m² or τ.μ (Greek sq meter abbreviation)
-                sqm_m = re.search(r"(\d+)\s*(?:m[\u00b22]|\u03c4\.\u03bc\.?)", text)
-                sqm = float(sqm_m.group(1)) if sqm_m else None
+                price = extract_price(text)
+                sqm = extract_sqm(text)
                 # Floor
                 floor_m = re.search(r"(\d+)(?:st|nd|rd|th)?\s*(?:floor|\u03cc\u03c1\u03bf\u03c6\u03bf\u03c2)", text, re.IGNORECASE)
                 floor = int(floor_m.group(1)) if floor_m else None
@@ -430,10 +469,8 @@ def scrape_rightmove(page, area, filters, profile_id, benchmarks, renov_cost):
         for item in results[:15]:
             try:
                 href = item["href"]; text = item["text"]
-                price_m = re.search(r"[\u20ac\u00a3]\s*([\d.,]+)", text)
-                price = parse_number(price_m.group(1)) if price_m else None
-                sqm_m = re.search(r"(\d+)\s*(?:sq\.?\s*m|m[\u00b22])", text, re.IGNORECASE)
-                sqm = float(sqm_m.group(1)) if sqm_m else None
+                price = extract_price(text)
+                sqm = extract_sqm(text)
                 title = text.split("\n")[0][:80] if text else "Property"
                 l = make_listing("rightmove", href, title, price, sqm, None, area, text,
                                  profile_id, filters, benchmarks, renov_cost)
@@ -517,10 +554,8 @@ def scrape_spitogatos_buildings(page, area, filters, profile_id, benchmarks, ren
         for item in results[:20]:
             try:
                 href = item["href"]; text = item["text"]
-                price_m = re.search(r"\u20ac\s*([\d.,]+)", text)
-                price = parse_number(price_m.group(1)) if price_m else None
-                sqm_m = re.search(r"(\d+)\s*m[\u00b22]", text)
-                sqm = float(sqm_m.group(1)) if sqm_m else None
+                price = extract_price(text)
+                sqm = extract_sqm(text)
                 title = text.split("\n")[0][:80] if text else "Building"
                 l = make_listing("spitogatos", href, title, price, sqm, None, area, text,
                                  profile_id, filters, benchmarks, renov_cost)
@@ -591,10 +626,8 @@ def scrape_generic_site(page, site_config, area, filters, profile_id, benchmarks
         for item in results[:20]:
             try:
                 href = item["href"]; text = item["text"]
-                price_m = re.search(site_config.get("price_regex", r"\u20ac\s*([\d.,]+)"), text)
-                price = parse_number(price_m.group(1)) if price_m else None
-                sqm_m = re.search(site_config.get("sqm_regex", r"(\d+)\s*(?:m[\u00b22]|sqm|\u03c4\.\u03bc)"), text, re.IGNORECASE)
-                sqm = float(sqm_m.group(1)) if sqm_m else None
+                price = extract_price(text)
+                sqm = extract_sqm(text)
                 title = text.split("\n")[0][:80] if text else "Property"
                 l = make_listing(name, href, title, price, sqm, None, area, text,
                                  profile_id, filters, benchmarks, renov_cost)
@@ -656,7 +689,13 @@ SITE_CONFIGS = {
 # ── Profile runner ─────────────────────────────────────────────────────────────
 def run_profile(profile, benchmarks, seen, results, page):
     name = profile["name"]; pid = profile["id"]
-    filters = profile["filters"]
+    filters = profile.get("filters") or {}
+
+    # Guard: a profile created with missing fields must not crash the whole run
+    required = ["areas", "min_price", "max_price", "min_sqm", "max_sqm"]
+    missing = [k for k in required if k not in filters]
+    if missing:
+        raise ValueError("profile is missing filters: " + ", ".join(missing))
     renov = profile.get("renovation_cost_per_sqm", 800)
     is_building = profile.get("property_type") == "building"
     log.info("=" * 50)
@@ -689,15 +728,30 @@ def run_profile(profile, benchmarks, seen, results, page):
 
     log.info("Total fetched: %d", len(all_listings))
 
-    # Filter by floor
+    # Filter by floor + require price and size
     filtered = []
+    dropped_no_data = 0
+    dropped_floor = 0
+    sample_logged = False
     for l in all_listings:
         if not l.price or not l.sqm:
+            dropped_no_data += 1
+            if not sample_logged:
+                log.warning("PARSE FAIL sample [%s] price=%s sqm=%s text=%r",
+                            l.source, l.price, l.sqm, (l.description or "")[:200])
+                sample_logged = True
             continue
         if l.floor is not None:
             if l.floor < filters.get("min_floor", -10) or l.floor > filters.get("max_floor", 100):
+                dropped_floor += 1
                 continue
         filtered.append(l)
+
+    log.info("Dropped: %d missing price/sqm, %d out of floor range", dropped_no_data, dropped_floor)
+    if filtered:
+        top = max(filtered, key=lambda x: x.deal_score)
+        log.info("Best score this profile: %d/7 (%s, EUR%s, %ssqm)",
+                 top.deal_score, top.area, top.price, top.sqm)
 
     # ── SORT BY SCORE (highest first) before sending ──
     filtered.sort(key=lambda x: x.deal_score, reverse=True)
@@ -757,7 +811,7 @@ def save_results(data):
 
 # ── Main ───────────────────────────────────────────────────────────────────────
 def main():
-    log.info("=== Property Scout v4.1 ===")
+    log.info("=== Property Scout v4.3 ===")
     profile_filter = os.environ.get("PROFILE_ID", "").strip()
     data = load_profiles()
     benchmarks = data.get("area_benchmarks", {})
