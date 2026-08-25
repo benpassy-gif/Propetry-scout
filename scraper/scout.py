@@ -709,17 +709,25 @@ def run_profile(profile, benchmarks, seen, results, page):
         already_seen = l.id in seen
         send_it = is_new_or_price_changed(l, seen)
         price_changed = already_seen and send_it
-        mark_seen(l, seen)
         results["listings"].append(asdict(l))
+
+        # Only consider listings that qualify (score >= MIN_SCORE or auction).
+        # IMPORTANT: do NOT mark low-score listings as seen - if filters change
+        # later and they qualify, they must still be able to trigger an alert.
+        qualifies = l.is_auction or l.deal_score >= MIN_SCORE
+        if not qualifies:
+            continue
         if not send_it:
             continue
+
+        send_telegram(format_message(l, name, price_changed))
+        mark_seen(l, seen)   # mark ONLY after actually sending
         if l.is_auction:
-            send_telegram(format_message(l, name, price_changed))
             auction_count += 1
-        elif l.deal_score >= MIN_SCORE:
-            send_telegram(format_message(l, name, price_changed))
-            if price_changed: price_change_count += 1
-            else: new_count += 1
+        elif price_changed:
+            price_change_count += 1
+        else:
+            new_count += 1
         time.sleep(0.5)
 
     return {"profile_id": pid, "profile_name": name, "fetched": len(all_listings),
