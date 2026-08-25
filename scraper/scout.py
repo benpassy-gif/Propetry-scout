@@ -148,6 +148,8 @@ def format_summary(run_summary: list) -> str:
                 parts += f", {r['price_changes']} price changes"
             if r.get("auctions"):
                 parts += f", {r['auctions']} auctions"
+            if r.get("below_threshold"):
+                parts += f", {r['below_threshold']} below threshold"
             lines.append(f"\u2705 {r['profile_name']}: {parts}")
     total_new   = sum(r.get("new_alerts", 0) for r in run_summary)
     total_price = sum(r.get("price_changes", 0) for r in run_summary)
@@ -217,6 +219,128 @@ def extract_sqm(text):
     if not candidates:
         return None
     return max(candidates)
+
+
+# ── Anti-blocking: escalating fetch strategy ─────────────────────────────────
+# Level 1: Playwright with stealth (in each scraper)
+# Level 2: Jina Reader  (free, renders JS, different IP than the runner)
+# Level 3: ScrapingBee  (residential proxies, defeats Cloudflare)
+SCRAPINGBEE_API_KEY = os.environ.get("SCRAPINGBEE_API_KEY", "")
+
+_BLOCK_MARKERS = [
+    "pardon our interruption", "just a moment", "checking your browser",
+    "access denied", "captcha", "unusual traffic", "are you a robot",
+]
+
+
+def looks_blocked(text):
+    if not text or len(text) < 400:
+        return True
+    low = text[:4000].lower()
+    return any(m in low for m in _BLOCK_MARKERS)
+
+
+def fetch_via_jina(url, timeout=45):
+    """Free reader service - renders JS and uses its own IP pool."""
+    try:
+        r = requests.get(
+            "https://r.jina.ai/" + url,
+            headers={"Accept": "text/plain", "X-Return-Format": "markdown"},
+            timeout=timeout,
+        )
+        if r.status_code == 200 and not looks_blocked(r.text):
+            log.info("  [jina] ok, %d chars", len(r.text))
+            return r.text
+        log.info("  [jina] failed (status=%s)", r.status_code)
+    except Exception as e:
+        log.info("  [jina] error: %s", str(e)[:80])
+    return None
+
+
+def fetch_via_scrapingbee(url, timeout=70):
+    """Paid fallback with residential proxies. 1000 free credits/month."""
+    if not SCRAPINGBEE_API_KEY:
+        log.info("  [scrapingbee] no API key set, skipping")
+        return None
+    try:
+        r = requests.get(
+            "https://app.scrapingbee.com/api/v1/",
+            params={
+                "api_key": SCRAPINGBEE_API_KEY,
+                "url": url,
+                "render_js": "true",
+                "premium_proxy": "true",
+                "country_code": "gr",
+            },
+            timeout=timeout,
+        )
+        if r.status_code == 200 and not looks_blocked(r.text):
+            log.info("  [scrapingbee] ok, %d chars", len(r.text))
+            return r.text
+        log.info("  [scrapingbee] failed (status=%s)", r.status_code)
+    except Exception as e:
+        log.info("  [scrapingbee] error: %s", str(e)[:80])
+    return None
+
+
+def strip_html(html):
+    text = re.sub(r"<script[\s\S]*?</script>", " ", html, flags=re.I)
+    text = re.sub(r"<style[\s\S]*?</style>", " ", text, flags=re.I)
+    text = re.sub(r"<[^>]+>", " ", text)
+    for a, b in [("&nbsp;", " "), ("&amp;", "&"), ("&euro;", "\u20ac"),
+                 ("&quot;", '"'), ("&#39;", "'")]:
+        text = text.replace(a, b)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def parse_blocks_from_text(content, link_regex, source, area, profile_id,
+                           filters, benchmarks, renov_cost, limit=25):
+    """
+    Extract listings from raw markdown/HTML fetched by a fallback service.
+    Takes each property link and the surrounding text as one listing card.
+    """
+    listings = []
+    if not content:
+        return listings
+    if content.lstrip().startswith("<") or "</html>" in content[:5000].lower():
+        content = strip_html(content)
+
+    seen_urls = set()
+    for m in re.finditer(link_regex, content):
+        href = m.group(0).strip("()<>\"' ")
+        if href in seen_urls:
+            continue
+        seen_urls.add(href)
+        # Context window around the link is the listing card
+        window = content[max(0, m.start() - 350): m.end() + 350]
+        price = extract_price(window)
+        sqm = extract_sqm(window)
+        if not price or not sqm:
+            continue
+        title = re.sub(r"[\[\]()]", " ", window[:120]).strip()
+        l = make_listing(source, href, title or "Property", price, sqm, None,
+                         area, window, profile_id, filters, benchmarks, renov_cost)
+        if l:
+            listings.append(l)
+        if len(listings) >= limit:
+            break
+    return listings
+
+
+def scrape_with_fallback(url, link_regex, source, area, profile_id,
+                         filters, benchmarks, renov_cost):
+    """Called when Playwright returned nothing - try Jina, then ScrapingBee."""
+    for fetcher in (fetch_via_jina, fetch_via_scrapingbee):
+        content = fetcher(url)
+        if not content:
+            continue
+        found = parse_blocks_from_text(content, link_regex, source, area,
+                                       profile_id, filters, benchmarks, renov_cost)
+        if found:
+            log.info("  [fallback] recovered %d listings via %s",
+                     len(found), fetcher.__name__)
+            return found
+    return []
 
 
 def make_listing(source, href, title, price, sqm, floor, area, desc, profile_id, filters, benchmarks, renov_cost):
@@ -325,7 +449,14 @@ def scrape_spitogatos(page, area, filters, profile_id, benchmarks, renov_cost):
             except Exception as e:
                 log.debug("Spitogatos card: %s", e)
     except Exception as e:
-        log.warning("Spitogatos %s: %s", area, e)
+        log.warning("Spitogatos %s: %s", area, str(e)[:100])
+
+    if not listings:
+        log.info("Spitogatos %s: 0 via browser, trying fallback services...", area)
+        listings = scrape_with_fallback(
+            url, r"https://www\.spitogatos\.gr/[a-z/]*property/\d+",
+            "spitogatos", area, profile_id, filters, benchmarks, renov_cost)
+
     log.info("Spitogatos %s: %d", area, len(listings))
     return listings
 
@@ -413,7 +544,14 @@ def scrape_xe(page, area, filters, profile_id, benchmarks, renov_cost):
             except Exception as e:
                 log.debug("XE card: %s", e)
     except Exception as e:
-        log.warning("XE %s: %s", area, e)
+        log.warning("XE %s: %s", area, str(e)[:100])
+
+    if not listings:
+        log.info("XE %s: 0 via browser, trying fallback services...", area)
+        listings = scrape_with_fallback(
+            url, r"https://www\.xe\.gr/[a-z/]*property/d/[^\s)\"']+",
+            "xe", area, profile_id, filters, benchmarks, renov_cost)
+
     log.info("XE %s: %d listings", area, len(listings))
     return listings
 
@@ -758,6 +896,15 @@ def run_profile(profile, benchmarks, seen, results, page):
     log.info("After filtering: %d | Sorted by score", len(filtered))
 
     new_count = price_change_count = auction_count = 0
+    min_score = filters.get("min_deal_score", MIN_SCORE)
+
+    # Visibility: how the scores are distributed this run
+    if filtered:
+        dist = {}
+        for l in filtered:
+            dist[l.deal_score] = dist.get(l.deal_score, 0) + 1
+        log.info("Score distribution: %s (threshold=%d)",
+                 dict(sorted(dist.items(), reverse=True)), min_score)
 
     for l in filtered:
         already_seen = l.id in seen
@@ -768,7 +915,7 @@ def run_profile(profile, benchmarks, seen, results, page):
         # Only consider listings that qualify (score >= MIN_SCORE or auction).
         # IMPORTANT: do NOT mark low-score listings as seen - if filters change
         # later and they qualify, they must still be able to trigger an alert.
-        qualifies = l.is_auction or l.deal_score >= MIN_SCORE
+        qualifies = l.is_auction or l.deal_score >= min_score
         if not qualifies:
             continue
         if not send_it:
@@ -784,8 +931,25 @@ def run_profile(profile, benchmarks, seen, results, page):
             new_count += 1
         time.sleep(0.5)
 
+    # If nothing cleared the bar, still surface the best few so the run is
+    # never silently empty - this is how you calibrate the threshold.
+    below_sent = 0
+    if new_count == 0 and price_change_count == 0 and auction_count == 0 and filtered:
+        best = [l for l in filtered if is_new_or_price_changed(l, seen)][:3]
+        if best:
+            send_telegram(
+                "\U0001f50e {}: no listing reached score {}/7.\n"
+                "Showing the {} best found instead:".format(name, min_score, len(best))
+            )
+            for l in best:
+                send_telegram(format_message(l, name, False))
+                mark_seen(l, seen)
+                below_sent += 1
+                time.sleep(0.5)
+
     return {"profile_id": pid, "profile_name": name, "fetched": len(all_listings),
-            "new_alerts": new_count, "price_changes": price_change_count, "auctions": auction_count,
+            "new_alerts": new_count, "price_changes": price_change_count,
+            "auctions": auction_count, "below_threshold": below_sent,
             "timestamp": datetime.utcnow().isoformat()}
 
 
@@ -828,12 +992,43 @@ def main():
     results = load_results()
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled", "--no-sandbox"])
+        browser = p.chromium.launch(headless=True, args=[
+            "--disable-blink-features=AutomationControlled",
+            "--no-sandbox",
+            "--disable-dev-shm-usage",
+            "--disable-infobars",
+            "--window-size=1440,900",
+            "--lang=el-GR",
+        ])
         context = browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            locale="el-GR", viewport={"width": 1366, "height": 768},
+            user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+            locale="el-GR",
+            timezone_id="Europe/Athens",
+            viewport={"width": 1440, "height": 900},
+            device_scale_factor=2,
+            java_script_enabled=True,
+            extra_http_headers={
+                "Accept-Language": "el-GR,el;q=0.9,en-US;q=0.8,en;q=0.7",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+                "Sec-Ch-Ua": '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+                "Sec-Ch-Ua-Platform": '"macOS"',
+                "Upgrade-Insecure-Requests": "1",
+            },
         )
-        context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+        # Mask the usual automation fingerprints
+        context.add_init_script("""
+            Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
+            Object.defineProperty(navigator, 'languages', {get: () => ['el-GR','el','en-US']});
+            Object.defineProperty(navigator, 'plugins', {get: () => [1,2,3,4,5]});
+            Object.defineProperty(navigator, 'hardwareConcurrency', {get: () => 8});
+            window.chrome = { runtime: {} };
+            const origQuery = navigator.permissions.query;
+            navigator.permissions.query = (p) => (
+                p.name === 'notifications'
+                    ? Promise.resolve({ state: Notification.permission })
+                    : origQuery(p)
+            );
+        """)
         page = context.new_page()
 
         run_summary = []
