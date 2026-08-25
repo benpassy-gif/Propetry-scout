@@ -8035,48 +8035,6 @@
     {
       "profile_id": "deep-discount",
       "profile_name": "Deep Discount Hunter",
-      "fetched": 96,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-08-20T16:27:00.343869"
-    },
-    {
-      "profile_id": "whole-building",
-      "profile_name": "Whole Building Hunter",
-      "fetched": 72,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-08-20T16:31:00.078082"
-    },
-    {
-      "profile_id": "cheap",
-      "profile_name": "Cheap",
-      "error": "'areas'",
-      "timestamp": "2026-08-20T16:31:00.078188"
-    },
-    {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 56,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-08-21T04:42:06.470892"
-    },
-    {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 32,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "timestamp": "2026-08-21T04:43:32.586469"
-    },
-    {
-      "profile_id": "deep-discount",
-      "profile_name": "Deep Discount Hunter",
       "fetched": 112,
       "new_alerts": 0,
       "price_changes": 0,
@@ -8451,6 +8409,48 @@
       "profile_name": "Cheap",
       "error": "profile is missing filters: areas",
       "timestamp": "2026-08-25T16:33:04.756995"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 72,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-08-25T17:39:03.041620"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 40,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-08-25T17:40:18.234723"
+    },
+    {
+      "profile_id": "deep-discount",
+      "profile_name": "Deep Discount Hunter",
+      "fetched": 112,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-08-25T17:43:24.382763"
+    },
+    {
+      "profile_id": "whole-building",
+      "profile_name": "Whole Building Hunter",
+      "fetched": 72,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "timestamp": "2026-08-25T17:47:03.092922"
+    },
+    {
+      "profile_id": "cheap",
+      "profile_name": "Cheap",
+      "error": "profile is missing filters: areas",
+      "timestamp": "2026-08-25T17:47:03.093015"
     }
   ]
 }
