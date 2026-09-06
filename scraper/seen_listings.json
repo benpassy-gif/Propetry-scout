@@ -463,5 +463,35 @@
     "price": 9000,
     "url": "https://www.xe.gr/en/property/d/property-to-rent/78d7e294-c44d-4892-92ce-30339174a67b/voula-ano-voula-9-000-220?first_in_widget_ad_id=ba77955b-cae6-4327-b4d0-657612649075&rank_in_widget=21&widget_name=search+results+list",
     "last_seen": "2026-09-02T19:10:59.822006"
+  },
+  "67cce99ffe19": {
+    "price": 5000,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/93ff1196-217b-46a3-bd72-8ce2fd229010/dionysos-5-000-508?first_in_widget_ad_id=93ff1196-217b-46a3-bd72-8ce2fd229010&rank_in_widget=1&widget_name=search+results+list",
+    "last_seen": "2026-09-06T08:29:36.096387"
+  },
+  "a7ca2b9a685a": {
+    "price": 5800,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/5c0dee7b-885f-4b27-9c25-a023faff4271/athens-edem-5-800-187?first_in_widget_ad_id=93ff1196-217b-46a3-bd72-8ce2fd229010&rank_in_widget=2&widget_name=search+results+list",
+    "last_seen": "2026-09-06T08:29:36.935012"
+  },
+  "bf4be51b3239": {
+    "price": 6500,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/ae96a060-d7b7-4da9-a461-d53ab5d109bc/athens-edem-6-500-187?first_in_widget_ad_id=93ff1196-217b-46a3-bd72-8ce2fd229010&rank_in_widget=3&widget_name=search+results+list",
+    "last_seen": "2026-09-06T08:29:37.770129"
+  },
+  "5b4fc8e23ddc": {
+    "price": 5000,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/93ff1196-217b-46a3-bd72-8ce2fd229010/dionysos-5-000-508?first_in_widget_ad_id=93ff1196-217b-46a3-bd72-8ce2fd229010&rank_in_widget=1&widget_name=search+results+list",
+    "last_seen": "2026-09-06T08:36:09.220821"
+  },
+  "115e2050d7e1": {
+    "price": 5800,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/5c0dee7b-885f-4b27-9c25-a023faff4271/athens-edem-5-800-187?first_in_widget_ad_id=93ff1196-217b-46a3-bd72-8ce2fd229010&rank_in_widget=2&widget_name=search+results+list",
+    "last_seen": "2026-09-06T08:36:10.071983"
+  },
+  "4ef65591f98d": {
+    "price": 6500,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/ae96a060-d7b7-4da9-a461-d53ab5d109bc/athens-edem-6-500-187?first_in_widget_ad_id=93ff1196-217b-46a3-bd72-8ce2fd229010&rank_in_widget=3&widget_name=search+results+list",
+    "last_seen": "2026-09-06T08:36:10.898598"
   }
 }
