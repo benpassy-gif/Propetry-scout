@@ -493,5 +493,25 @@
     "price": 6500,
     "url": "https://www.xe.gr/en/property/d/property-to-rent/ae96a060-d7b7-4da9-a461-d53ab5d109bc/athens-edem-6-500-187?first_in_widget_ad_id=93ff1196-217b-46a3-bd72-8ce2fd229010&rank_in_widget=3&widget_name=search+results+list",
     "last_seen": "2026-09-06T08:36:10.898598"
+  },
+  "d182c8bd845b": {
+    "price": 7000,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/bee3316f-87c3-4e20-8998-96e7fa67ecca/glyfada-aexone-7-000-480?first_in_widget_ad_id=4fd0b0e5-c186-4f63-8821-5d06a1f39b60&rank_in_widget=2&widget_name=search+results+list",
+    "last_seen": "2026-09-14T20:13:25.976438"
+  },
+  "8562f4d20d4a": {
+    "price": 5500,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/11204749-b9de-4b86-baee-b56e4806114c/anavyssos-5-500-350?first_in_widget_ad_id=4fd0b0e5-c186-4f63-8821-5d06a1f39b60&rank_in_widget=17&widget_name=search+results+list",
+    "last_seen": "2026-09-14T20:13:26.860261"
+  },
+  "e0b63234e25f": {
+    "price": 9000,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/78d7e294-c44d-4892-92ce-30339174a67b/voula-ano-voula-9-000-220?first_in_widget_ad_id=4fd0b0e5-c186-4f63-8821-5d06a1f39b60&rank_in_widget=21&widget_name=search+results+list",
+    "last_seen": "2026-09-14T20:13:27.741227"
+  },
+  "440e907ccfb5": {
+    "price": 7500,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/b59b333e-3af9-41bd-aa38-302f995ded05/glyfada-center-7-500-200?first_in_widget_ad_id=4fd0b0e5-c186-4f63-8821-5d06a1f39b60&rank_in_widget=30&widget_name=search+results+list",
+    "last_seen": "2026-09-14T20:13:28.645881"
   }
 }
