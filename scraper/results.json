@@ -8315,55 +8315,53 @@
       "estimated_rent_yield": 0.1619706428209887,
       "total_cost": 148175,
       "arv": 440000
+    },
+    {
+      "id": "7c1b1a49fc11",
+      "source": "xe",
+      "title": "0-85?first_in_widget_ad_id=5dfb5d8e-6453-476a-a44e-bb705b5d1368&rank_in_widget=5",
+      "url": "https://www.xe.gr/en/property/d/property-to-rent/d3496abf-87ee-4f25-bf68-79668bd11258/arachova-25-000-330?first_in_widget_ad_id=5dfb5d8e-6453-476a-a44e-bb705b5d1368&rank_in_widget=6&widget_name=search+results+list",
+      "price": 25000,
+      "sqm": 330.0,
+      "floor": null,
+      "area": "byronas",
+      "price_per_sqm": 75.75757575757575,
+      "is_auction": false,
+      "description": "0-85?first_in_widget_ad_id=5dfb5d8e-6453-476a-a44e-bb705b5d1368&rank_in_widget=5&widget_name=search+results+list)\n\n[![Image 9: Home for rent Arachova Maisonette 330 sq.m. furnished renovated](https://blob.cdn.xe.gr/live/2026/09/21/41ae33ed-0016-4353-9811-b1af648a2704/41ae33ed-0016-4353-9811-b1af648a",
+      "scraped_at": "2026-09-21T20:24:01.700571",
+      "profile_id": "whole-building",
+      "deal_score": 7,
+      "discount_vs_market": -0.960127591706539,
+      "estimated_renovation": 231000,
+      "estimated_flip_roi": 1.4278799612778315,
+      "estimated_rent_yield": 0.1380058083252662,
+      "total_cost": 258250,
+      "arv": 627000
+    },
+    {
+      "id": "5fa330a67c13",
+      "source": "xe",
+      "title": "n_widget_ad_id=5dfb5d8e-6453-476a-a44e-bb705b5d1368&rank_in_widget=12&widget_nam",
+      "url": "https://www.xe.gr/en/property/d/property-to-rent/78d7e294-c44d-4892-92ce-30339174a67b/voula-ano-voula-9-000-220?first_in_widget_ad_id=5dfb5d8e-6453-476a-a44e-bb705b5d1368&rank_in_widget=13&widget_name=search+results+list",
+      "price": 9000,
+      "sqm": 220.0,
+      "floor": null,
+      "area": "byronas",
+      "price_per_sqm": 40.90909090909091,
+      "is_auction": false,
+      "description": "n_widget_ad_id=5dfb5d8e-6453-476a-a44e-bb705b5d1368&rank_in_widget=12&widget_name=search+results+list)\n\n[![Image 22: Home for rent Voula (Ano Voula) Maisonette 220 sq.m. furnished renovated](https://blob.cdn.xe.gr/live/2025/04/08/9c469eeb-2eb1-4952-8956-4bb4a52c890a/9c469eeb-2eb1-4952-8956-4bb4a52c8",
+      "scraped_at": "2026-09-21T20:24:01.701637",
+      "profile_id": "whole-building",
+      "deal_score": 7,
+      "discount_vs_market": -0.978468899521531,
+      "estimated_renovation": 154000,
+      "estimated_flip_roi": 1.551736768207069,
+      "estimated_rent_yield": 0.14504608998229657,
+      "total_cost": 163810,
+      "arv": 418000
     }
   ],
   "runs": [
-    {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 60,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-15T19:22:31.133381"
-    },
-    {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 40,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-15T19:24:26.031968"
-    },
-    {
-      "profile_id": "deep-discount",
-      "profile_name": "Deep Discount Hunter",
-      "fetched": 100,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-15T19:29:17.872838"
-    },
-    {
-      "profile_id": "whole-building",
-      "profile_name": "Whole Building Hunter",
-      "fetched": 80,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-15T19:34:06.755920"
-    },
-    {
-      "profile_id": "cheap",
-      "profile_name": "Cheap",
-      "error": "profile is missing filters: areas",
-      "timestamp": "2026-09-15T19:34:06.755994"
-    },
     {
       "profile_id": "flip-athens-cheap",
       "profile_name": "Flip Athens - Cheap",
@@ -8777,6 +8775,52 @@
       "profile_name": "Cheap",
       "error": "profile is missing filters: areas",
       "timestamp": "2026-09-21T09:59:12.819553"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 51,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-09-21T20:12:54.133745"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 34,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-09-21T20:14:48.371545"
+    },
+    {
+      "profile_id": "deep-discount",
+      "profile_name": "Deep Discount Hunter",
+      "fetched": 85,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-09-21T20:19:36.284704"
+    },
+    {
+      "profile_id": "whole-building",
+      "profile_name": "Whole Building Hunter",
+      "fetched": 70,
+      "new_alerts": 2,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-09-21T20:24:12.872998"
+    },
+    {
+      "profile_id": "cheap",
+      "profile_name": "Cheap",
+      "error": "profile is missing filters: areas",
+      "timestamp": "2026-09-21T20:24:12.873576"
     }
   ]
 }
