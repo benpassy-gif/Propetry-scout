@@ -8799,55 +8799,75 @@
       "estimated_rent_yield": 0.14504608998229657,
       "total_cost": 163810,
       "arv": 418000
+    },
+    {
+      "id": "7197fec4e327",
+      "source": "xe",
+      "title": "a-607d-4499-927c-591543159dd7&rank_in_widget=10&widget_name=search+results+list ",
+      "url": "https://www.xe.gr/en/property/d/property-to-rent/c74fb093-5b47-4007-9594-e59c35f728d0/agioi-anargyroi-tsoumpa-580-45?first_in_widget_ad_id=a880abba-607d-4499-927c-591543159dd7&rank_in_widget=11&widget_name=search+results+list",
+      "price": 5801,
+      "sqm": 45.0,
+      "floor": null,
+      "area": "neos-kosmos",
+      "price_per_sqm": 128.9111111111111,
+      "is_auction": false,
+      "description": "a-607d-4499-927c-591543159dd7&rank_in_widget=10&widget_name=search+results+list)\n\n* * *\n\nMultiple listings\n\n[![Image 15: Home for rent Agioi Anargyroi (Tsoumpa) Apartment 45 sq.m. renovated](https://blob.cdn.xe.gr/live/2026/09/23/2d8f5b30-f645-485b-a1a7-1c79b92fbd86/2d8f5b30-f645-485b-a1a7-1c79b92fb",
+      "scraped_at": "2026-09-24T09:17:25.117850",
+      "profile_id": "whole-building",
+      "deal_score": 7,
+      "discount_vs_market": -0.9462870370370371,
+      "estimated_renovation": 31500,
+      "estimated_flip_roi": 1.855398646699675,
+      "estimated_rent_yield": 0.15704692556848213,
+      "total_cost": 37823,
+      "arv": 108000
+    },
+    {
+      "id": "541e3496e350",
+      "source": "xe",
+      "title": "Check the property prices and market trends  https://www.xe.gr/en/property/real-",
+      "url": "https://www.xe.gr/en/property/d/property-to-rent/d3496abf-87ee-4f25-bf68-79668bd11258/arachova-25-000-330?first_in_widget_ad_id=a880abba-607d-4499-927c-591543159dd7&rank_in_widget=18&widget_name=search+results+list",
+      "price": 25000,
+      "sqm": 800.0,
+      "floor": null,
+      "area": "neos-kosmos",
+      "price_per_sqm": 31.25,
+      "is_auction": false,
+      "description": " Check the property prices and market trends](https://www.xe.gr/en/property/real-estate-market-trends-in-greece)\n\n[![Image 27: Home for rent Arachova Maisonette 330 sq.m. furnished renovated](https://blob.cdn.xe.gr/live/2026/09/21/41ae33ed-0016-4353-9811-b1af648a2704/41ae33ed-0016-4353-9811-b1af648a",
+      "scraped_at": "2026-09-24T09:17:25.119430",
+      "profile_id": "whole-building",
+      "deal_score": 7,
+      "discount_vs_market": -0.9869791666666666,
+      "estimated_renovation": 560000,
+      "estimated_flip_roi": 2.269476372924649,
+      "estimated_rent_yield": 0.17982120051085568,
+      "total_cost": 587250,
+      "arv": 1920000
+    },
+    {
+      "id": "b9917f104dfa",
+      "source": "xe",
+      "title": "0abba-607d-4499-927c-591543159dd7&rank_in_widget=9&widget_name=search+results+li",
+      "url": "https://www.xe.gr/en/property/d/property-to-rent/2c36f884-0ce9-45fb-813e-d1443bbf2e23/athens-profitis-ilias-650-49?first_in_widget_ad_id=a880abba-607d-4499-927c-591543159dd7&rank_in_widget=10&widget_name=search+results+list",
+      "price": 65000,
+      "sqm": 49.0,
+      "floor": null,
+      "area": "neos-kosmos",
+      "price_per_sqm": 1326.530612244898,
+      "is_auction": false,
+      "description": "0abba-607d-4499-927c-591543159dd7&rank_in_widget=9&widget_name=search+results+list)\n\n* * *\n\nMultiple listings\n\n[![Image 14: Home for rent Athens (Profitis Ilias) Apartment 49 sq.m. renovated](https://blob.cdn.xe.gr/live/2026/09/22/50848401-18fe-4d0d-9d60-16f13a20eeed/50848401-18fe-4d0d-9d60-16f13a20",
+      "scraped_at": "2026-09-24T09:17:25.117469",
+      "profile_id": "whole-building",
+      "deal_score": 6,
+      "discount_vs_market": -0.4472789115646258,
+      "estimated_renovation": 34300,
+      "estimated_flip_roi": 0.11840228245363767,
+      "estimated_rent_yield": 0.06151212553495007,
+      "total_cost": 105150,
+      "arv": 117600
     }
   ],
   "runs": [
-    {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 60,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-18T08:55:35.412061"
-    },
-    {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 40,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-18T08:57:33.173875"
-    },
-    {
-      "profile_id": "deep-discount",
-      "profile_name": "Deep Discount Hunter",
-      "fetched": 100,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-18T09:02:29.164217"
-    },
-    {
-      "profile_id": "whole-building",
-      "profile_name": "Whole Building Hunter",
-      "fetched": 80,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-18T09:07:27.805684"
-    },
-    {
-      "profile_id": "cheap",
-      "profile_name": "Cheap",
-      "error": "profile is missing filters: areas",
-      "timestamp": "2026-09-18T09:07:27.805787"
-    },
     {
       "profile_id": "flip-athens-cheap",
       "profile_name": "Flip Athens - Cheap",
@@ -9261,6 +9281,52 @@
       "profile_name": "Cheap",
       "error": "profile is missing filters: areas",
       "timestamp": "2026-09-23T19:31:26.685953"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 60,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-09-24T09:08:12.180272"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 40,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-09-24T09:10:10.081930"
+    },
+    {
+      "profile_id": "deep-discount",
+      "profile_name": "Deep Discount Hunter",
+      "fetched": 100,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-09-24T09:14:59.091147"
+    },
+    {
+      "profile_id": "whole-building",
+      "profile_name": "Whole Building Hunter",
+      "fetched": 83,
+      "new_alerts": 3,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-09-24T09:19:44.253865"
+    },
+    {
+      "profile_id": "cheap",
+      "profile_name": "Cheap",
+      "error": "profile is missing filters: areas",
+      "timestamp": "2026-09-24T09:19:44.254488"
     }
   ]
 }
