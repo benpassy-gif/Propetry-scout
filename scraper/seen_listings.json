@@ -588,5 +588,30 @@
     "price": 65000,
     "url": "https://www.xe.gr/en/property/d/property-to-rent/2c36f884-0ce9-45fb-813e-d1443bbf2e23/athens-profitis-ilias-650-49?first_in_widget_ad_id=a880abba-607d-4499-927c-591543159dd7&rank_in_widget=10&widget_name=search+results+list",
     "last_seen": "2026-09-24T19:37:47.781769"
+  },
+  "fb48fc558bf6": {
+    "price": 5801,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/c74fb093-5b47-4007-9594-e59c35f728d0/agioi-anargyroi-tsoumpa-580-45?first_in_widget_ad_id=98c3bd0e-0be7-435b-a77e-e917c156316d&rank_in_widget=13&widget_name=search+results+list",
+    "last_seen": "2026-09-25T09:32:35.008506"
+  },
+  "3561627802a2": {
+    "price": 7803,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/55a99e90-f0d0-405d-b465-9e872bf65d7d/melissia-amalia-fleming-780-74?first_in_widget_ad_id=98c3bd0e-0be7-435b-a77e-e917c156316d&rank_in_widget=15&widget_name=search+results+list",
+    "last_seen": "2026-09-25T09:32:35.875620"
+  },
+  "52acb06ebb32": {
+    "price": 25000,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/d3496abf-87ee-4f25-bf68-79668bd11258/arachova-25-000-330?first_in_widget_ad_id=98c3bd0e-0be7-435b-a77e-e917c156316d&rank_in_widget=21&widget_name=search+results+list",
+    "last_seen": "2026-09-25T09:32:36.717060"
+  },
+  "5b4358d03329": {
+    "price": 13002,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/cc6c9589-7ff8-46b1-964a-594cd07d96a0/glyfada-terpsithea-1-300-70?first_in_widget_ad_id=98c3bd0e-0be7-435b-a77e-e917c156316d&rank_in_widget=24&widget_name=search+results+list",
+    "last_seen": "2026-09-25T09:32:37.587332"
+  },
+  "ea54e5175d77": {
+    "price": 65000,
+    "url": "https://www.xe.gr/en/property/d/property-to-rent/2c36f884-0ce9-45fb-813e-d1443bbf2e23/athens-profitis-ilias-650-49?first_in_widget_ad_id=98c3bd0e-0be7-435b-a77e-e917c156316d&rank_in_widget=32&widget_name=search+results+list",
+    "last_seen": "2026-09-25T09:32:38.436086"
   }
 }
