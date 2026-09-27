@@ -34,6 +34,11 @@ SEEN_FILE     = "scraper/seen_listings.json"
 
 MIN_SCORE = 4
 
+# XE is disabled: its search URL was never verified against the real site and
+# it returns nationwide results, mostly rentals. Re-enable once a real search
+# URL copied from the browser is wired into scrape_xe().
+ENABLE_XE = False
+
 AUCTION_KEYWORDS = [
     "pleistairiasmos", "pleistiriasmou", "auction",
     "\u03c0\u03bb\u03b5\u03b9\u03c3\u03c4\u03b7\u03c1\u03b9\u03b1\u03c3\u03bc",
@@ -180,9 +185,13 @@ def parse_number(text):
 # ── Robust price / sqm extraction (works for all Greek sites) ─────────────────
 # Greek sites write prices as "310.000 EUR", "EUR 310,000", "310000EUR" etc.
 # The currency symbol can appear BEFORE or AFTER the number, so match both.
+# A price is either 1-3 digits followed by thousands groups (310.000 / 310,000)
+# or a plain run of 4-8 digits (310000). Whitespace is NOT allowed inside the
+# number - otherwise "580" and a neighbouring "1" merge into 5801.
+_NUM = r"(\d{1,3}(?:[.,]\d{3})+|\d{4,8})(?![\d.,]*\d)"
 _PRICE_PATTERNS = [
-    r"(?:\u20ac|EUR)\s*([\d][\d.,\s]{2,})",     # EUR 310.000
-    r"([\d][\d.,\s]{2,})\s*(?:\u20ac|EUR)",     # 310.000 EUR
+    r"(?:\u20ac|EUR)\s?" + _NUM,     # EUR 310.000
+    _NUM + r"\s?(?:\u20ac|EUR)",     # 310.000 EUR
 ]
 _SQM_PATTERNS = [
     r"(\d+(?:[.,]\d+)?)\s*(?:m\u00b2|m2|\u03c4\.?\u03bc\.?|sq\.?\s?m|sqm)",
@@ -293,6 +302,17 @@ def strip_html(html):
     return re.sub(r"\s+", " ", text).strip()
 
 
+def clean_title(window):
+    """Pick a human-readable title from a fallback-scraped text block."""
+    for line in re.split(r"[\n|]", window):
+        line = re.sub(r"https?://\S+", " ", line)
+        line = re.sub(r"[\[\]()#*_]|\S+=\S+", " ", line)
+        line = re.sub(r"\s+", " ", line).strip()
+        if len(line) >= 12 and re.search(r"[A-Za-z\u0370-\u03ff]{4}", line):
+            return line[:70]
+    return "Property"
+
+
 def parse_blocks_from_text(content, link_regex, source, area, profile_id,
                            filters, benchmarks, renov_cost, limit=25):
     """
@@ -317,7 +337,7 @@ def parse_blocks_from_text(content, link_regex, source, area, profile_id,
         sqm = extract_sqm(window)
         if not price or not sqm:
             continue
-        title = re.sub(r"[\[\]()]", " ", window[:120]).strip()
+        title = clean_title(window)
         l = make_listing(source, href, title or "Property", price, sqm, None,
                          area, window, profile_id, filters, benchmarks, renov_cost)
         if l:
@@ -343,12 +363,52 @@ def scrape_with_fallback(url, link_regex, source, area, profile_id,
     return []
 
 
+# ── Sale-vs-rental guard ─────────────────────────────────────────────────────
+# Rental ads leaking into a sale profile score absurdly high (a 900 EUR/month
+# rent looks like a 99% discount on a purchase price), so they must be rejected.
+_RENT_URL_MARKERS = [
+    "to-rent", "for-rent", "/rent", "rent/", "enoikiasi", "enoikiaseis",
+    "-rent-", "rental",
+]
+_RENT_TEXT_MARKERS = [
+    "per month", "/month", "monthly rent", "for rent", "to rent",
+    "\u03b1\u03bd\u03ac \u03bc\u03ae\u03bd\u03b1", "\u03bc\u03b7\u03bd\u03b9\u03b1\u03af\u03b1",
+    "\u03b5\u03bd\u03bf\u03b9\u03ba\u03af\u03b1\u03c3\u03b7", "\u03b5\u03bd\u03bf\u03b9\u03ba\u03b9\u03ac\u03b6\u03b5\u03c4\u03b1\u03b9",
+]
+
+# An Athens sale below this EUR/sqm is not a real sale price - it is a rent,
+# a deposit, a monthly fee, or a parsing error.
+MIN_PLAUSIBLE_PRICE_PER_SQM = 300
+MIN_PLAUSIBLE_SALE_PRICE = 15000
+
+
+def is_rental(url, text):
+    low_url = (url or "").lower()
+    if any(m in low_url for m in _RENT_URL_MARKERS):
+        return True
+    low_text = (text or "").lower()
+    return any(m in low_text for m in _RENT_TEXT_MARKERS)
+
+
 def make_listing(source, href, title, price, sqm, floor, area, desc, profile_id, filters, benchmarks, renov_cost):
     listing_id = hashlib.md5((href + profile_id).encode()).hexdigest()[:12]
     full_text = (title + " " + desc).lower()
     is_auction = any(kw in full_text for kw in AUCTION_KEYWORDS)
-    if price and sqm and (price / sqm) > filters.get("max_price_per_sqm", 999999):
+
+    # Reject rental ads - this scout only tracks properties for sale
+    if is_rental(href, full_text):
+        log.debug("Rejected rental: %s", href[:90])
         return None
+
+    if price and sqm:
+        pps = price / sqm
+        if pps > filters.get("max_price_per_sqm", 999999):
+            return None
+        # Implausibly cheap => rent / deposit / bad parse, not a sale price
+        if pps < MIN_PLAUSIBLE_PRICE_PER_SQM or price < MIN_PLAUSIBLE_SALE_PRICE:
+            log.debug("Rejected implausible sale price EUR%s / %ssqm: %s",
+                      price, sqm, href[:90])
+            return None
     l = Listing(
         id=listing_id, source=source, title=title[:80], url=href,
         price=price, sqm=sqm, floor=floor, area=area,
@@ -488,7 +548,7 @@ def scrape_xe(page, area, filters, profile_id, benchmarks, renov_cost):
     from urllib.parse import quote
     url = (
         f"https://www.xe.gr/en/property/search?"
-        f"transaction_name=buy&item_type=re_residence"
+        f"transaction_name=sale&transaction_type=sale&item_type=re_residence"
         f"&text_search={quote(search_name)}"
         f"&minimum_price={filters['min_price']}"
         f"&maximum_price={filters['max_price']}"
@@ -549,7 +609,7 @@ def scrape_xe(page, area, filters, profile_id, benchmarks, renov_cost):
     if not listings:
         log.info("XE %s: 0 via browser, trying fallback services...", area)
         listings = scrape_with_fallback(
-            url, r"https://www\.xe\.gr/[a-z/]*property/d/[^\s)\"']+",
+            url, r"https://www\.xe\.gr/[a-z/]*property/d/(?![^\s)\"']*(?:to-rent|for-rent|rental))[^\s)\"']+",
             "xe", area, profile_id, filters, benchmarks, renov_cost)
 
     log.info("XE %s: %d listings", area, len(listings))
@@ -849,8 +909,9 @@ def run_profile(profile, benchmarks, seen, results, page):
             all_listings.extend(scrape_spitogatos(page, area, filters, pid, benchmarks, renov))
             time.sleep(1)
 
-        all_listings.extend(scrape_xe(page, area, filters, pid, benchmarks, renov))
-        time.sleep(1)
+        if ENABLE_XE:
+            all_listings.extend(scrape_xe(page, area, filters, pid, benchmarks, renov))
+            time.sleep(1)
 
         if not is_building:
             all_listings.extend(scrape_rightmove(page, area, filters, pid, benchmarks, renov))
@@ -871,6 +932,7 @@ def run_profile(profile, benchmarks, seen, results, page):
     dropped_no_data = 0
     dropped_floor = 0
     sample_logged = False
+    dropped_range = 0
     for l in all_listings:
         if not l.price or not l.sqm:
             dropped_no_data += 1
@@ -879,13 +941,21 @@ def run_profile(profile, benchmarks, seen, results, page):
                             l.source, l.price, l.sqm, (l.description or "")[:200])
                 sample_logged = True
             continue
+        # Sites often ignore URL filters, so re-check the profile ranges here
+        if not (filters["min_price"] <= l.price <= filters["max_price"]):
+            dropped_range += 1
+            continue
+        if not (filters["min_sqm"] <= l.sqm <= filters["max_sqm"]):
+            dropped_range += 1
+            continue
         if l.floor is not None:
             if l.floor < filters.get("min_floor", -10) or l.floor > filters.get("max_floor", 100):
                 dropped_floor += 1
                 continue
         filtered.append(l)
 
-    log.info("Dropped: %d missing price/sqm, %d out of floor range", dropped_no_data, dropped_floor)
+    log.info("Dropped: %d missing price/sqm, %d outside price/size range, %d out of floor range",
+             dropped_no_data, dropped_range, dropped_floor)
     if filtered:
         top = max(filtered, key=lambda x: x.deal_score)
         log.info("Best score this profile: %d/7 (%s, EUR%s, %ssqm)",
@@ -975,7 +1045,7 @@ def save_results(data):
 
 # ── Main ───────────────────────────────────────────────────────────────────────
 def main():
-    log.info("=== Property Scout v4.3 ===")
+    log.info("=== Property Scout v4.4 ===")
     profile_filter = os.environ.get("PROFILE_ID", "").strip()
     data = load_profiles()
     benchmarks = data.get("area_benchmarks", {})
