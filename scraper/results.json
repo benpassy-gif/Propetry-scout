@@ -9613,55 +9613,53 @@
       "estimated_rent_yield": 0.05104928306903428,
       "total_cost": 210620,
       "arv": 224000
+    },
+    {
+      "id": "cd601c597079",
+      "source": "ktimatoemporiki",
+      "title": "APARTMENT",
+      "url": "https://ktimatoemporiki.gr/property/apartment-for-sale-in-chania-center-id-04-13568",
+      "price": 158000,
+      "sqm": 64.0,
+      "floor": null,
+      "area": "palaio-faliro",
+      "price_per_sqm": 2468.75,
+      "is_auction": false,
+      "description": "APARTMENT\n9\nCHANIA\nApartment for Sale in Chania Center\n€158,000\n1\n1\n64 m²",
+      "scraped_at": "2026-10-01T10:49:53.839910",
+      "profile_id": "rental-south",
+      "deal_score": 4,
+      "discount_vs_market": -0.228515625,
+      "estimated_renovation": 38400,
+      "estimated_flip_roi": -0.0276327034469661,
+      "estimated_rent_yield": 0.0474029057069604,
+      "total_cost": 210620,
+      "arv": 204800
+    },
+    {
+      "id": "cd601c597079",
+      "source": "ktimatoemporiki",
+      "title": "APARTMENT",
+      "url": "https://ktimatoemporiki.gr/property/apartment-for-sale-in-chania-center-id-04-13568",
+      "price": 158000,
+      "sqm": 64.0,
+      "floor": null,
+      "area": "glyfada",
+      "price_per_sqm": 2468.75,
+      "is_auction": false,
+      "description": "APARTMENT\n9\nCHANIA\nApartment for Sale in Chania Center\n€158,000\n1\n1\n64 m²",
+      "scraped_at": "2026-10-01T10:50:42.103856",
+      "profile_id": "rental-south",
+      "deal_score": 4,
+      "discount_vs_market": -0.29464285714285715,
+      "estimated_renovation": 38400,
+      "estimated_flip_roi": 0.06352673060488083,
+      "estimated_rent_yield": 0.05104928306903428,
+      "total_cost": 210620,
+      "arv": 224000
     }
   ],
   "runs": [
-    {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 60,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-25T19:41:50.565544"
-    },
-    {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 40,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-25T19:43:44.529729"
-    },
-    {
-      "profile_id": "deep-discount",
-      "profile_name": "Deep Discount Hunter",
-      "fetched": 104,
-      "new_alerts": 4,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-25T19:48:24.726918"
-    },
-    {
-      "profile_id": "whole-building",
-      "profile_name": "Whole Building Hunter",
-      "fetched": 80,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-25T19:52:47.226840"
-    },
-    {
-      "profile_id": "cheap",
-      "profile_name": "Cheap",
-      "error": "profile is missing filters: areas",
-      "timestamp": "2026-09-25T19:52:47.226891"
-    },
     {
       "profile_id": "flip-athens-cheap",
       "profile_name": "Flip Athens - Cheap",
@@ -10075,6 +10073,52 @@
       "profile_name": "Cheap",
       "error": "profile is missing filters: areas",
       "timestamp": "2026-09-30T20:33:31.508342"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 6,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-10-01T10:49:09.286852"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 12,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-10-01T10:50:43.104977"
+    },
+    {
+      "profile_id": "deep-discount",
+      "profile_name": "Deep Discount Hunter",
+      "fetched": 5,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-10-01T10:54:36.569595"
+    },
+    {
+      "profile_id": "whole-building",
+      "profile_name": "Whole Building Hunter",
+      "fetched": 4,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-10-01T10:57:43.670265"
+    },
+    {
+      "profile_id": "cheap",
+      "profile_name": "Cheap",
+      "error": "profile is missing filters: areas",
+      "timestamp": "2026-10-01T10:57:43.670347"
     }
   ]
 }
