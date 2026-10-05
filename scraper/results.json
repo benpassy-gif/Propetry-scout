@@ -10009,55 +10009,53 @@
       "estimated_rent_yield": 0.048385985066053995,
       "total_cost": 174100,
       "arv": 172800
+    },
+    {
+      "id": "5cde2c876ff7",
+      "source": "ktimatoemporiki",
+      "title": "+1 MORE UNITS",
+      "url": "https://ktimatoemporiki.gr/property/apartment-for-sale-in-kato-petralona-athens-id-a4-13584",
+      "price": 130000,
+      "sqm": 54.0,
+      "floor": null,
+      "area": "glyfada",
+      "price_per_sqm": 2407.4074074074074,
+      "is_auction": false,
+      "description": "+1 MORE UNITS\nAPARTMENT\n11\nPETRALONA, ATHENS CENTER\nApartment for Sale in Kato Petralona, Athens\n€130,000\n1\n1\n54 m²",
+      "scraped_at": "2026-10-05T11:18:56.030266",
+      "profile_id": "rental-south",
+      "deal_score": 5,
+      "discount_vs_market": -0.31216931216931215,
+      "estimated_renovation": 32400,
+      "estimated_flip_roi": 0.08558299827685238,
+      "estimated_rent_yield": 0.052107983917288915,
+      "total_cost": 174100,
+      "arv": 189000
+    },
+    {
+      "id": "5cde2c876ff7",
+      "source": "ktimatoemporiki",
+      "title": "+1 MORE UNITS",
+      "url": "https://ktimatoemporiki.gr/property/apartment-for-sale-in-kato-petralona-athens-id-a4-13584",
+      "price": 130000,
+      "sqm": 54.0,
+      "floor": null,
+      "area": "palaio-faliro",
+      "price_per_sqm": 2407.4074074074074,
+      "is_auction": false,
+      "description": "+1 MORE UNITS\nAPARTMENT\n11\nPETRALONA, ATHENS CENTER\nApartment for Sale in Kato Petralona, Athens\n€130,000\n1\n1\n54 m²",
+      "scraped_at": "2026-10-05T11:18:09.483555",
+      "profile_id": "rental-south",
+      "deal_score": 4,
+      "discount_vs_market": -0.2476851851851852,
+      "estimated_renovation": 32400,
+      "estimated_flip_roi": -0.007466973004020678,
+      "estimated_rent_yield": 0.048385985066053995,
+      "total_cost": 174100,
+      "arv": 172800
     }
   ],
   "runs": [
-    {
-      "profile_id": "flip-athens-cheap",
-      "profile_name": "Flip Athens - Cheap",
-      "fetched": 6,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-29T10:30:59.050141"
-    },
-    {
-      "profile_id": "rental-south",
-      "profile_name": "Rental - South Suburbs",
-      "fetched": 6,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-29T10:32:29.300709"
-    },
-    {
-      "profile_id": "deep-discount",
-      "profile_name": "Deep Discount Hunter",
-      "fetched": 10,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-29T10:36:16.191505"
-    },
-    {
-      "profile_id": "whole-building",
-      "profile_name": "Whole Building Hunter",
-      "fetched": 8,
-      "new_alerts": 0,
-      "price_changes": 0,
-      "auctions": 0,
-      "below_threshold": 0,
-      "timestamp": "2026-09-29T10:39:22.907725"
-    },
-    {
-      "profile_id": "cheap",
-      "profile_name": "Cheap",
-      "error": "profile is missing filters: areas",
-      "timestamp": "2026-09-29T10:39:22.907807"
-    },
     {
       "profile_id": "flip-athens-cheap",
       "profile_name": "Flip Athens - Cheap",
@@ -10471,6 +10469,52 @@
       "profile_name": "Cheap",
       "error": "profile is missing filters: areas",
       "timestamp": "2026-10-04T19:02:58.193459"
+    },
+    {
+      "profile_id": "flip-athens-cheap",
+      "profile_name": "Flip Athens - Cheap",
+      "fetched": 0,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-10-05T11:17:25.226558"
+    },
+    {
+      "profile_id": "rental-south",
+      "profile_name": "Rental - South Suburbs",
+      "fetched": 14,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-10-05T11:18:57.030932"
+    },
+    {
+      "profile_id": "deep-discount",
+      "profile_name": "Deep Discount Hunter",
+      "fetched": 0,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-10-05T11:22:42.309693"
+    },
+    {
+      "profile_id": "whole-building",
+      "profile_name": "Whole Building Hunter",
+      "fetched": 0,
+      "new_alerts": 0,
+      "price_changes": 0,
+      "auctions": 0,
+      "below_threshold": 0,
+      "timestamp": "2026-10-05T11:25:48.255635"
+    },
+    {
+      "profile_id": "cheap",
+      "profile_name": "Cheap",
+      "error": "profile is missing filters: areas",
+      "timestamp": "2026-10-05T11:25:48.255708"
     }
   ]
 }
