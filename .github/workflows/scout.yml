@@ -30,10 +30,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Python venv & deps
+       - name: Setup Python venv & deps
         run: |
-          # Use the Mac's own python3 - no network download of a runtime
-          python3 -m venv .venv
+          # Pin to Python 3.12 - Playwright 1.40 doesn't support 3.14 yet
+          # (greenlet dependency has no 3.14 wheels)
+          rm -rf .venv
+          python3.12 -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip --quiet
           pip install -r scraper/requirements.txt --quiet
