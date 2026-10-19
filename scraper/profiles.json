@@ -232,4 +232,20 @@
       "tourist_zone": false
     }
   }
+},
+{
+  "id": "test-all",
+  "name": "TEST - verify pipeline",
+  "active": false,
+  "property_type": "apartment",
+  "renovation_cost_per_sqm": 800,
+  "filters": {
+    "areas": ["nea-smyrni", "kallithea"],
+    "min_price": 50000,
+    "max_price": 200000,
+    "min_sqm": 40,
+    "max_sqm": 120,
+    "max_price_per_sqm": 4000,
+    "min_deal_score": 2
+  }
 }
